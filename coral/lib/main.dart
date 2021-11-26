@@ -42,13 +42,13 @@ class _BottomBarState extends State<BottomBar> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
+              Icons.local_mall,
             ),
-            label: '主页',
+            label: '领养',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.account_circle,
+              Icons.person,
             ),
             label: '我的',
           ),

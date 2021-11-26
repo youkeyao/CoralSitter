@@ -80,6 +80,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
     else {
       if (_username == "1" && _password == "2") {
         CommonData.me = UserInfo(name: "name", avatar: "https://www.javaroad.cn/static/images/avatar.png");
+        CommonData.mycorals.add(CoralInfo(name: "泡泡", avatar: "https://www.javaroad.cn/static/images/avatar.png", position: "凤凰岛西侧海域", score: 96, updateTime: "2020.12.10"));
         Navigator.of(context).pop();
         widget.callback();
       }
