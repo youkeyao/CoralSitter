@@ -35,11 +35,12 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: ScreenUtil().setHeight(10),),
             const Text("Welcome to", textAlign: TextAlign.center, style: TextStyle(fontSize: 24, color: Colors.white, fontFamily: 'Times New Roman'),),
             const Text("CoralSitter", textAlign: TextAlign.center, style: TextStyle(fontSize: 60, color: Colors.white, fontFamily: 'Times New Roman'),),
-            SizedBox(height: ScreenUtil().setHeight(15),),
-            Icon(Icons.flutter_dash, color: Colors.white, size: ScreenUtil().setWidth(40),),
-            SizedBox(height: ScreenUtil().setHeight(15),),
+            SizedBox(height: ScreenUtil().setHeight(10),),
+            Icon(Icons.flutter_dash, color: Colors.white, size: ScreenUtil().setHeight(35),),
+            SizedBox(height: ScreenUtil().setHeight(10),),
             // login button
             Container(
+              height: ScreenUtil().setHeight(5),
               margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
               child: TextButton(
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),

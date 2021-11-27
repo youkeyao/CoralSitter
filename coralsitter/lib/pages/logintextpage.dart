@@ -81,8 +81,50 @@ class _LoginTextPageState extends State<LoginTextPage> {
       if (_username == "1" && _password == "2") {
         CommonData.me = UserInfo(name: "Dolnna", avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c", sign: "今天也是热爱珊瑚的一天");
         CommonData.me?.tags = ["外向开朗", "热情", "心思细腻"];
-        CommonData.mycorals.add(CoralInfo(name: "泡泡", avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c", position: "凤凰岛西侧海域", score: 96, updateTime: "2020.12.10"));
-        CommonData.mycorals.add(CoralInfo(name: "嘻嘻", avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c", position: "渤海海域东侧", score: 89, updateTime: "2020.12.10"));
+        CommonData.mycorals.add(
+          CoralInfo(
+            name: "泡泡",
+            avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c",
+            position: "凤凰岛西侧海域",
+            tags: "好强 / 敏感 / 易碎 / 丰满 / 易满足",
+            score: 96,
+            updateTime: "2020.12.10",
+            positionImage: "http://via.placeholder.com/500x250",
+            species: "气泡珊瑚",
+            monitor: {
+              "光照强度": "充足",
+              "海水气温": "温暖",
+              "微量元素": "偏少"
+            },
+            grow: {
+              "大小": "14",
+              "距离上次测量": "+0.2",
+              "平均每月增长": "0.15",
+            },
+          )
+        );
+        CommonData.mycorals.add(
+          CoralInfo(
+            name: "嘻嘻",
+            avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c",
+            position: "渤海海域东侧",
+            tags: "好强 / 敏感 / 易碎 / 丰满 / 易满足",
+            score: 89,
+            updateTime: "2020.12.10",
+            positionImage: "http://via.placeholder.com/500x250",
+            species: "气泡珊瑚",
+            monitor: {
+              "光照强度": "充足",
+              "海水气温": "温暖",
+              "微量元素": "偏少"
+            },
+            grow: {
+              "大小": "14",
+              "距离上次测量": "+0.2",
+              "平均每月增长": "0.15",
+            },
+          )
+        );
         Navigator.of(context).pop();
         widget.callback();
       }
@@ -168,9 +210,9 @@ class _LoginTextPageState extends State<LoginTextPage> {
           },
           child: ListView(
             children: <Widget>[
-              SizedBox(height: ScreenUtil().setHeight(5),),
-              Icon(Icons.flutter_dash, color: Colors.white, size: ScreenUtil().setWidth(40),),
-              SizedBox(height: ScreenUtil().setHeight(5),),
+              SizedBox(height: ScreenUtil().setHeight(10),),
+              Icon(Icons.flutter_dash, color: Colors.white, size: ScreenUtil().setHeight(20),),
+              SizedBox(height: ScreenUtil().setHeight(10),),
               // input
               Container(
                 margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
@@ -194,7 +236,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
                   ),
                 ),
               ),
-              SizedBox(height: ScreenUtil().setHeight(3),),
+              SizedBox(height: ScreenUtil().setHeight(5),),
               // login button
               Container(
                 margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),

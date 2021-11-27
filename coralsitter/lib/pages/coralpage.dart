@@ -1,8 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widget/swipercards.dart';
+
+Widget monitorBox(Color color, IconData icon, String indicator, String value) {
+  return Stack(
+    alignment: Alignment.center,
+    children: [
+      SizedBox(width: ScreenUtil().setWidth(22), height: ScreenUtil().setWidth(27),),
+      Positioned(
+        top: ScreenUtil().setWidth(2),
+        child: Container(
+          width: ScreenUtil().setWidth(22), 
+          height: ScreenUtil().setWidth(25),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            color: color,
+          ),
+        ),
+      ),
+      Positioned(
+        top: 0,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(4)),
+          width: ScreenUtil().setWidth(10), 
+          height: ScreenUtil().setWidth(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(ScreenUtil().setWidth(5)),
+            color: color,
+          ),
+          child: Icon(icon),
+        ),
+      ),
+      Positioned(
+        top: ScreenUtil().setWidth(15),
+        child: Text(indicator, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+      ),
+      Positioned(
+        top: ScreenUtil().setWidth(20),
+        child: Text(value, style: const TextStyle(fontSize: 12, color: Colors.brown),),
+      ),
+    ],
+  );
+}
+
+Widget growBox(String title, String value) {
+  return Column(
+    children: [
+      Text(title, style: const TextStyle(fontSize: 12),),
+      const SizedBox(height: 5,),
+      Row(
+        children: [
+          Text(value, style: const TextStyle(fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),),
+          const SizedBox(width: 5,),
+          const Text("cm", style: TextStyle(color: Colors.blue),),
+        ],
+      ),
+    ],
+  );
+}
 
 class CoralPage extends StatefulWidget {
   const CoralPage({ Key? key, required this.coral }) : super(key: key);
@@ -19,10 +77,9 @@ class _CoralPageState extends State<CoralPage> {
     Widget topArea = Stack(
       alignment: Alignment.center,
       children: [
-        Container(
+        SizedBox(
           width: ScreenUtil().setWidth(100),
-          height: ScreenUtil().setWidth(80),
-          color: Colors.green,
+          height: ScreenUtil().setWidth(73),
         ),
         // background image
         Positioned(
@@ -33,53 +90,91 @@ class _CoralPageState extends State<CoralPage> {
             child: swiperCards(coralImages, context),
           )
         ),
+        // top bar
+        Positioned(
+          top: 0,
+          left: 0,
+          child: Container(
+            width: ScreenUtil().setWidth(100),
+            padding: EdgeInsets.only(top: ScreenUtil().setWidth(7), left: ScreenUtil().setWidth(5), right: ScreenUtil().setWidth(7.5)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white,),
+                ),
+                TextButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24)
+                        )
+                      ),
+                      side: MaterialStateProperty.all(
+                        const BorderSide(
+                          color: Colors.white,
+                          width: 1),
+                        ),
+                    ),
+                    onPressed: () {},
+                    child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(widget.coral.species, style: const TextStyle(fontSize: 12, color: Colors.white),),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         // Avatar
         Positioned(
-          left: ScreenUtil().setWidth(7.5),
-          top: ScreenUtil().setWidth(40),
+          left: ScreenUtil().setWidth(5),
+          top: ScreenUtil().setWidth(38),
           child: Container(
-            width: ScreenUtil().setWidth(20),
-            height: ScreenUtil().setWidth(20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadiusDirectional.circular(ScreenUtil().setWidth(10)),
-              image: DecorationImage(image: NetworkImage(widget.coral.avatar,),),
-              // border: Border.all(color: Colors.white, width: ScreenUtil().setWidth(10)),
-              shape: BoxShape.circle,
+              border: Border.all(width: ScreenUtil().setWidth(2.5), color: Colors.white),
+              borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15.5)),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(ScreenUtil().setWidth(1)),
+              decoration: BoxDecoration(
+                // image: DecorationImage(image: NetworkImage(widget.coral.avatar)),
+                gradient: const LinearGradient(colors: [Colors.pink, Colors.blue,], begin: FractionalOffset(1, 1), end: FractionalOffset(0, 0)),
+                borderRadius: BorderRadius.circular(ScreenUtil().setWidth(13)),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: ScreenUtil().setWidth(2), color: Colors.white),
+                  borderRadius: BorderRadius.circular(ScreenUtil().setWidth(12)),
+                ),
+                child: ClipOval(
+                  child: Image.network(widget.coral.avatar, width: ScreenUtil().setWidth(20), height: ScreenUtil().setWidth(20),),
+                ),
+              ),
             ),
           ),
         ),
         // name and tags
-        // Positioned(
-        //   top: ScreenUtil().setWidth(40),
-        //   child: Container(
-        //     padding: EdgeInsets.only(left: ScreenUtil().setWidth(15), right: ScreenUtil().setWidth(15), top: ScreenUtil().setWidth(13)),
-        //     width: ScreenUtil().setWidth(85),
-        //     height: ScreenUtil().setWidth(33),
-        //     decoration: BoxDecoration(
-        //       boxShadow: const [BoxShadow(color: Color(0xFFEEEEEE), offset: Offset(0.0, 10.0), blurRadius: 5.0)],
-        //       color: Colors.white,
-        //       borderRadius: BorderRadius.circular((5.0)),
-        //     ),
-        //     child: CommonData.me == null ? const SizedBox() : Column(
-        //       children: [
-        //         Text(CommonData.me!.name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-        //         Row(
-        //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //           children: CommonData.me!.tags.map((tag) => Container(
-        //             height: 24,
-        //             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
-        //             margin: const EdgeInsets.only(top: 10.0),
-        //             decoration: BoxDecoration(
-        //               color: Colors.blueAccent[700],
-        //               borderRadius: BorderRadius.circular(12.0),
-        //             ),
-        //             child: Text(tag, style: const TextStyle(fontSize: 12, color: Colors.white),),
-        //           )).toList(),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
+        Positioned(
+          top: ScreenUtil().setWidth(48),
+          left: ScreenUtil().setWidth(40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.coral.name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+              SizedBox(
+                width: ScreenUtil().setWidth(40),
+                child: Text(
+                  widget.coral.tags,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12,),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
 
@@ -91,6 +186,44 @@ class _CoralPageState extends State<CoralPage> {
           padding: const EdgeInsets.all(0.0),
           children: [
             topArea,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("种植位置", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                  const SizedBox(height: 15,),
+                  Image.network(widget.coral.positionImage),
+                  const SizedBox(height: 30,),
+                  const Text("每日检测", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                  Text("更新于"+widget.coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
+                  const SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      monitorBox(const Color(0xFFBBDEFB), Icons.wb_sunny_outlined, "光照强度", widget.coral.monitor["光照强度"]!),
+                      monitorBox(const Color(0xFFF1F8E9), Icons.waves, "海水气温", widget.coral.monitor["海水气温"]!),
+                      monitorBox(const Color(0xFFFFE0B2), Icons.bubble_chart, "微量元素", widget.coral.monitor["微量元素"]!),
+                    ],
+                  ),
+                  const SizedBox(height: 30,),
+                  const Text("成长指数", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                  Text("更新于"+widget.coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
+                  const SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      growBox("大小（直径）", widget.coral.grow["大小"]!),
+                      const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
+                      growBox("距离上次测量", widget.coral.grow["距离上次测量"]!),
+                      const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
+                      growBox("平均每月增长", widget.coral.grow["平均每月增长"]!),
+                    ],
+                  ),
+                  const SizedBox(height: 30,),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -19,10 +19,10 @@ class _SitterPageState extends State<SitterPage> {
   }
 
   List<Widget> buildMyCorals(BuildContext context) {
-    List<Widget> widgets = [SizedBox(height: ScreenUtil().setHeight(2), key: const ValueKey(0),)];
+    List<Widget> widgets = [const SizedBox(height: 10, key: ValueKey(0),)];
     for (int i = 0; i < CommonData.mycorals.length; i ++) {
       widgets.add(coralCard(CommonData.mycorals[i], context, key: 2*i+1,),);
-      widgets.add(SizedBox(height: ScreenUtil().setHeight(2), key: ValueKey(2*i)));
+      widgets.add(SizedBox(height: 20, key: ValueKey(2*i)));
     }
     return widgets;
   }
