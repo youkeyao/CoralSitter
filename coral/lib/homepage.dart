@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.all(0.0),
       elevation: 10.0,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      shadowColor: Colors.black45,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
         child: TextButton(
@@ -66,7 +67,9 @@ class _HomePageState extends State<HomePage> {
             children: [
               Row(
                 children: [
-                  Image.network(coral!.avatar, width: ScreenUtil().setWidth(10), height: ScreenUtil().setWidth(10),),
+                  ClipOval(
+                    child: Image.network(coral!.avatar, width: ScreenUtil().setWidth(10), height: ScreenUtil().setWidth(10),),
+                  ),
                   const SizedBox(width: 5,),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,6 +103,7 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.all(0.0),
       elevation: 10.0,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      shadowColor: Colors.black45,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
         child: Row(
@@ -136,13 +140,14 @@ class _HomePageState extends State<HomePage> {
     return ScreenUtilInit(
       designSize: const Size(100, 100),
       builder: () => Scaffold(
+        backgroundColor: Colors.grey[100],
         appBar: AppBar(
           elevation: 0.0,
           toolbarHeight: 1,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey[100],
         ),
         body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(5), vertical: 10),
           children: [
             const Text("每日精选", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
             swiperCards(daily),

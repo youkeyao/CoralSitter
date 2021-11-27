@@ -1,7 +1,9 @@
 class UserInfo {
   String name;
   String avatar;
-  UserInfo({required this.name, required this.avatar});
+  String sign;
+  List<String> tags = [];
+  UserInfo({required this.name, required this.avatar, required this.sign});
 }
 
 class CoralInfo {

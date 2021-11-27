@@ -14,12 +14,14 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
+        elevation: 0.0,
         toolbarHeight: 50,
         title: const Text("设置"),
         centerTitle: true,
-        backgroundColor: Colors.white60,
-        foregroundColor: Colors.black54,
+        backgroundColor: Colors.grey[100],
+        foregroundColor: Colors.black,
       ),
       body: ListView(
         children: [
