@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/pages/logintextpage.dart';
+import 'package:coralsitter/common.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key, required this.callback }) : super(key: key);
@@ -12,17 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Color? background = Colors.blueAccent[700];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  Color? background = Color(CommonData.themeColor);
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +26,9 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: ScreenUtil().setHeight(10),),
             const Text("Welcome to", textAlign: TextAlign.center, style: TextStyle(fontSize: 24, color: Colors.white, fontFamily: 'Times New Roman'),),
             const Text("CoralSitter", textAlign: TextAlign.center, style: TextStyle(fontSize: 60, color: Colors.white, fontFamily: 'Times New Roman'),),
-            SizedBox(height: ScreenUtil().setHeight(10),),
-            Icon(Icons.flutter_dash, color: Colors.white, size: ScreenUtil().setHeight(35),),
-            SizedBox(height: ScreenUtil().setHeight(10),),
+            SizedBox(height: ScreenUtil().setHeight(8),),
+            Image(image: const AssetImage('assets/icons/icon.png'), height: ScreenUtil().setHeight(35),),
+            SizedBox(height: ScreenUtil().setHeight(12),),
             // login button
             Container(
               height: ScreenUtil().setHeight(5),

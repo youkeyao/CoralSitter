@@ -63,7 +63,7 @@ class _SitterPageState extends State<SitterPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
                     margin: const EdgeInsets.only(top: 10.0),
                     decoration: BoxDecoration(
-                      color: Colors.blueAccent[700],
+                      color: Color(CommonData.themeColor),
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Text(tag, style: const TextStyle(fontSize: 12, color: Colors.white),),

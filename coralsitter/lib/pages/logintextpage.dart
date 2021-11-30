@@ -15,7 +15,7 @@ class LoginTextPage extends StatefulWidget {
 }
 
 class _LoginTextPageState extends State<LoginTextPage> {
-  Color? background = Colors.blueAccent[700];
+  Color? background = Color(CommonData.themeColor);
   // focus
   final FocusNode _focusNodeUserName = FocusNode();
   final FocusNode _focusNodePassWord = FocusNode();
@@ -104,7 +104,6 @@ class _LoginTextPageState extends State<LoginTextPage> {
           },
         );
         Map<dynamic, dynamic> responseData = json.decode(response.body);
-        print(responseData);
 
         if (responseData['success']) {
           // CommonData.me = UserInfo(name: "Dolnna", avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c", sign: "今天也是热爱珊瑚的一天");
@@ -350,7 +349,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
           child: ListView(
             children: <Widget>[
               SizedBox(height: ScreenUtil().setHeight(8),),
-              Icon(Icons.flutter_dash, color: Colors.white, size: ScreenUtil().setHeight(20),),
+              Image(image: const AssetImage('assets/icons/icon.png'), height: ScreenUtil().setHeight(20),),
               SizedBox(height: ScreenUtil().setHeight(8),),
               // input
               Container(

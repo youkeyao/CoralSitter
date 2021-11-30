@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
+import 'package:coralsitter/pages/matchpage.dart';
 import 'package:coralsitter/widget/coralcard.dart';
 import 'package:coralsitter/widget/swipercards.dart';
 
@@ -37,13 +38,14 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MatchPage())),
               child: Column(
                 children: [
                   const Text("智能匹配", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
                   const Text("领养有缘分的珊瑚", style: TextStyle(fontSize: 10, color: Colors.blue),),
-                  const SizedBox(height: 10),
-                  Image(image: const AssetImage('assets/images/match.png'), width: ScreenUtil().setWidth(30), height: ScreenUtil().setWidth(30),),
+                  const SizedBox(height: 20),
+                  Image(image: const AssetImage('assets/images/match.png'), width: ScreenUtil().setWidth(20), height: ScreenUtil().setWidth(20),),
+                  const SizedBox(height: 5),
                 ],
               ),
             ),
@@ -54,8 +56,9 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   const Text("抽选盲盒", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
                   const Text("隐藏限定珊瑚形象", style: TextStyle(fontSize: 10, color: Colors.blue),),
-                  const SizedBox(height: 10),
-                  Image(image: const AssetImage('assets/images/box.png'), width: ScreenUtil().setWidth(30), height: ScreenUtil().setWidth(30),),
+                  const SizedBox(height: 20),
+                  Image(image: const AssetImage('assets/images/box.png'), width: ScreenUtil().setWidth(20), height: ScreenUtil().setWidth(20),),
+                  const SizedBox(height: 5),
                 ],
               ),
             ),

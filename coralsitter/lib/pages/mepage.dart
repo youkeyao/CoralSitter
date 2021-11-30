@@ -52,13 +52,14 @@ class _MePageState extends State<MePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(CommonData.me!.name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                    const SizedBox(height: 10),
                     Row(
                       children: CommonData.me!.tags.map((e) => Container(
                         height: 24,
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
                         margin: const EdgeInsets.only(top: 5.0, right: 10.0),
                         decoration: BoxDecoration(
-                          color: Colors.blueAccent[700],
+                          color: Color(CommonData.themeColor),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Text(e, style: const TextStyle(fontSize: 12, color: Colors.white),),

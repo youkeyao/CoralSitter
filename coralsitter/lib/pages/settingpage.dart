@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
@@ -13,20 +14,23 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        elevation: 0.0,
-        toolbarHeight: 50,
-        title: const Text("设置"),
-        centerTitle: true,
+    return ScreenUtilInit(
+      designSize: const Size(100, 100),
+      builder: () => Scaffold(
         backgroundColor: Colors.grey[100],
-        foregroundColor: Colors.black,
-      ),
-      body: ListView(
-        children: [
-          TextButton(onPressed: logOff, child: const Text("退出登陆", style: TextStyle(fontSize: 20),),)
-        ],
+        appBar: AppBar(
+          elevation: 0.0,
+          toolbarHeight: 50,
+          title: const Text("设置"),
+          centerTitle: true,
+          backgroundColor: Colors.grey[100],
+          foregroundColor: Colors.black,
+        ),
+        body: ListView(
+          children: [
+            TextButton(onPressed: logOff, child: const Text("退出登陆", style: TextStyle(fontSize: 20),),)
+          ],
+        ),
       ),
     );
   }

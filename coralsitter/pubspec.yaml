@@ -38,6 +38,7 @@ dependencies:
   flutter_swiper_null_safety: ^1.0.2
   reorderables: ^0.4.1
   http: ^0.13.4
+  simple_animations: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,9 @@ flutter:
   assets:
     - assets/images/match.png
     - assets/images/box.png
+    - assets/icons/icon.png
+    - assets/icons/matchicon.png
+    - assets/images/coralbackground.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

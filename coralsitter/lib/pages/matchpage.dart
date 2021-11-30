@@ -1,0 +1,179 @@
+import 'dart:math';
+import 'package:coralsitter/common.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:simple_animations/simple_animations.dart';
+
+import 'package:coralsitter/pages/adoptpage.dart';
+import 'package:coralsitter/widget/progressbar.dart';
+
+class AnimatedWave extends StatelessWidget {
+  const AnimatedWave({Key? key, required this.height, required this.speed, this.offset = 0.0}) : super(key: key);
+  final double height;
+  final double speed;
+  final double offset;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        height: height,
+        width: constraints.biggest.width,
+        child: LoopAnimation(
+          duration: Duration(milliseconds: (5000 / speed).round()),
+          tween: Tween(begin: 0.0, end: 2 * pi),
+          builder: (context, child, double value) {
+            return CustomPaint(
+              foregroundPainter: CurvePainter(value: value + offset),
+            );
+          }
+        ),
+      );
+    });
+  }
+}
+
+class CurvePainter extends CustomPainter {
+  const CurvePainter({ Key? key, required this.value});
+  final double value;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final white = Paint()..color = Colors.white.withAlpha(60);
+    final path = Path();
+
+    final y1 = sin(value);
+    final y2 = sin(value + pi / 2);
+    final y3 = sin(value + pi);
+
+    final startPointY = size.height * (0.5 + 0.4 * y1);
+    final controlPointY = size.height * (0.5 + 0.4 * y2);
+    final endPointY = size.height * (0.5 + 0.4 * y3);
+
+    path.moveTo(size.width * 0, startPointY);
+    path.quadraticBezierTo(size.width * 0.5, controlPointY, size.width, endPointY);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+    canvas.drawPath(path, white);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class MatchPage extends StatefulWidget {
+  const MatchPage({ Key? key }) : super(key: key);
+
+  @override
+  _MatchPageState createState() => _MatchPageState();
+}
+
+class _MatchPageState extends State<MatchPage> {
+  String status = "正在匹配...";
+  CoralSpecies? species;
+
+  onBottom(Widget child) => Positioned.fill(
+    child: Align(
+      alignment: Alignment.bottomCenter,
+      child: child,
+    ),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    species = CoralSpecies(
+      species: "气泡珊瑚",
+      en: "Plerogyra sinuosa",
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
+      designSize: const Size(100, 100),
+      builder: () => Scaffold(
+        backgroundColor: Color(CommonData.themeColor),
+        appBar: AppBar(
+          elevation: 0.0,
+          toolbarHeight: 50,
+          title: const Text('匹配珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
+          centerTitle: true,
+          backgroundColor: Color(CommonData.themeColor),
+          foregroundColor: Colors.black,
+          leading: const SizedBox(),
+        ),
+        body: Stack(
+          children: [
+            // wave animation
+            onBottom(AnimatedWave(
+              height: ScreenUtil().setHeight(20),
+              speed: 1.0,
+            )),
+            onBottom(AnimatedWave(
+              height: ScreenUtil().setHeight(15),
+              speed: 0.9,
+              offset: pi,
+            )),
+            onBottom(AnimatedWave(
+              height: ScreenUtil().setHeight(10),
+              speed: 1.2,
+              offset: pi / 2,
+            )),
+            Positioned.fill(
+              child: Column(
+                children: [
+                  SizedBox(height: ScreenUtil().setHeight(5)),
+                  Image(image: const AssetImage('assets/icons/matchicon.png'), height: ScreenUtil().setHeight(40),),
+                  SizedBox(height: ScreenUtil().setHeight(3)),
+                  Text(status, style: const TextStyle(fontSize: 20, color: Colors.white,),),
+                  SizedBox(height: ScreenUtil().setHeight(4)),
+                  const Text('按照标签为您匹配一只独一无二的珊瑚', style: TextStyle(fontSize: 12, color: Colors.white,),),
+                  SizedBox(height: ScreenUtil().setHeight(4)),
+                  // progressbar
+                  PlayAnimation(
+                    duration: Duration(milliseconds: (10000).round()),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    builder: (context, child, double value) {
+                      return progressBar(value, ScreenUtil().setWidth(70), 16);
+                    },
+                    onComplete: () {
+                      if (species != null) {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdoptPage(species: species!,)),);
+                      }
+                      else {
+                        status = "匹配失败";
+                        setState(() {
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: ScreenUtil().setHeight(6)),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(Colors.blue[300]),
+                      backgroundColor: MaterialStateProperty.all(Colors.grey[300]),
+                      shape: MaterialStateProperty.all(
+                        const CircleBorder(
+                            side: BorderSide(
+                              style: BorderStyle.none,
+                            )
+                        ),
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Padding(padding: EdgeInsets.all(ScreenUtil().setHeight(1)), child: Icon(Icons.clear, size: ScreenUtil().setHeight(4),),),
+                  ),
+                ],
+              )
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
