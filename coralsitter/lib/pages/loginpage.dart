@@ -48,14 +48,14 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text("Log in", style: TextStyle(fontSize: 15, color: background),)
               )
             ),
-            Container(
-              height: ScreenUtil().setHeight(4),
-              margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
-              child: TextButton(
-                onPressed: () {},
-                child: const Text("have no account?", style: TextStyle(fontSize: 12, color: Colors.white30),)
-              )
-            ),
+            // Container(
+            //   height: ScreenUtil().setHeight(4),
+            //   margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
+            //   child: TextButton(
+            //     onPressed: () {},
+            //     child: const Text("have no account?", style: TextStyle(fontSize: 12, color: Colors.white30),)
+            //   )
+            // ),
           ],
         ),
       ),

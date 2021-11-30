@@ -166,7 +166,7 @@ class _CoralPageState extends State<CoralPage> {
               SizedBox(
                 width: ScreenUtil().setWidth(40),
                 child: Text(
-                  widget.coral.tags,
+                  widget.coral.tags.join(' / '),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 12,),
@@ -191,19 +191,19 @@ class _CoralPageState extends State<CoralPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("种植位置", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-                  const SizedBox(height: 15,),
-                  Image.network(widget.coral.positionImage),
-                  const SizedBox(height: 30,),
+                  // const Text("种植位置", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                  // const SizedBox(height: 15,),
+                  // Image.network(widget.coral.positionImage),
+                  // const SizedBox(height: 30,),
                   const Text("每日检测", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
                   Text("更新于"+widget.coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
                   const SizedBox(height: 15,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      monitorBox(const Color(0xFFBBDEFB), Icons.wb_sunny_outlined, "光照强度", widget.coral.monitor["光照强度"]!),
-                      monitorBox(const Color(0xFFF1F8E9), Icons.waves, "海水气温", widget.coral.monitor["海水气温"]!),
-                      monitorBox(const Color(0xFFFFE0B2), Icons.bubble_chart, "微量元素", widget.coral.monitor["微量元素"]!),
+                      monitorBox(const Color(0xFFBBDEFB), Icons.wb_sunny_outlined, "光照强度", widget.coral.light),
+                      monitorBox(const Color(0xFFF1F8E9), Icons.waves, "海水气温", widget.coral.temp),
+                      monitorBox(const Color(0xFFFFE0B2), Icons.bubble_chart, "微量元素", widget.coral.microelement),
                     ],
                   ),
                   const SizedBox(height: 30,),
@@ -213,11 +213,11 @@ class _CoralPageState extends State<CoralPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      growBox("大小（直径）", widget.coral.grow["大小"]!),
+                      growBox("大小（直径）", widget.coral.size.toString()),
                       const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
-                      growBox("距离上次测量", widget.coral.grow["距离上次测量"]!),
+                      growBox("距离上次测量", (widget.coral.lastmeasure > 0 ? '+' : '') + widget.coral.lastmeasure.toString()),
                       const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
-                      growBox("平均每月增长", widget.coral.grow["平均每月增长"]!),
+                      growBox("平均每月增长", widget.coral.growth.toString()),
                     ],
                   ),
                   const SizedBox(height: 30,),

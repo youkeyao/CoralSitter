@@ -1,3 +1,5 @@
-# coral
+# Server for project
 
-Server for project.
+## route
+- /login
+- /signup
