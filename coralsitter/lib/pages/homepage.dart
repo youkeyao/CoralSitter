@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/pages/matchpage.dart';
 import 'package:coralsitter/widget/coralcard.dart';
 import 'package:coralsitter/widget/swipercards.dart';
+import 'package:coralsitter/cardswiper.dart';
+import 'package:coralsitter/alignment.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({ Key? key }) : super(key: key);
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             TextButton(
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MatchPage())),
+              onPressed: () => Navigator.of(context).pushNamed(MyRouter.match),
               child: Column(
                 children: [
                   const Text("智能匹配", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),

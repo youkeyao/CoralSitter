@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/pages/coralpage.dart';
 
 Widget coralCard(CoralInfo coral, BuildContext context, {int key=0}) {
   return Card(
@@ -12,7 +11,7 @@ Widget coralCard(CoralInfo coral, BuildContext context, {int key=0}) {
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
     shadowColor: Colors.black45,
     child: TextButton(
-      onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CoralPage(coral: coral,))),
+      onPressed: () => Navigator.of(context).pushNamed(MyRouter.coral, arguments: coral),
       child: ListTile(
         leading: ClipOval(
           child: Image.network(coral.avatar, width: ScreenUtil().setWidth(10), height: ScreenUtil().setWidth(10),),

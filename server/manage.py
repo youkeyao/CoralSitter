@@ -54,12 +54,9 @@ response: {
     'tags': tags,
     'mycorals': [
         {
-            'master': master,
             'coralname': coralname,
             'position': position,
             'updatetime': updatetime,
-            'tags': tags,
-            'species': species,
             'light': light,
             'temp': temp,
             'microelement': microelement,
@@ -67,6 +64,22 @@ response: {
             'lastmeasure': lastmeasure,
             'growth': growth,
             'score': score,
+            'birthtime': birthtime,
+            'adopttime': adopttime,
+            'species': {
+                'species': species,
+                'speciesen': speciesen,
+                'tags': tags,
+                'classification': classification,
+                'classificationen': classificationen,
+                'difficulty': difficulty,
+                'growspeed': growspeed,
+                'current': current,
+                'light': light,
+                'feed': feed,
+                'color': color,
+                'attention': attention,
+            },
         },
         ...
     ],
@@ -86,6 +99,9 @@ def login():
             [username])
         user['mycorals'] = []
         for coral in corals:
+            species = query_db('select * from coralspecies where species = ?',
+                [coral['species']], one=True)
+            coral['species'] = species
             user['mycorals'].append(coral)
     else:
         user = {}
@@ -102,21 +118,7 @@ response: {
     'username': username,
     'sign': sign,
     'tags': tags,
-    'mycorals': {
-        master,
-        coralname,
-        position,
-        updatetime,
-        tags,
-        species,
-        light,
-        temp,
-        microelement,
-        size,
-        lastmeasure,
-        growth,
-        score,
-    },
+    'mycorals': [],
     'success': True/False
 }
 '''
@@ -127,7 +129,7 @@ def signup():
 
     response = {}
     try:
-        cur = g.db.execute('insert into users values(?, ?, ?, ?)',
+        g.db.execute('insert into users values(?, ?, ?, ?)',
             [username, password, "无签名", "无标签"])
         g.db.commit()
         shutil.copy("./static/user_avatar/default.jpg", "./static/user_avatar/" + username + ".jpg")
@@ -143,6 +145,69 @@ def signup():
         response['success'] = False
     return response
 
+'''
+match route
+post: {
+    'tags': tags
+}
+response: {
+    'species': species,
+    'speciesen': speciesen,
+    'tags': tags,
+    'classification': classification,
+    'classificationen': classificationen,
+    'difficulty': difficulty,
+    'growspeed': growspeed,
+    'current': current,
+    'light': light,
+    'feed': feed,
+    'color': color,
+    'attention': attention,
+}
+'''
+@app.route('/match',methods=["POST"])
+def match():
+    tags = request.form['tags']
+
+    species = query_db('select * from coralspecies',
+        [],)
+    
+    return species[0]
+
+'''
+listcoral route
+post: {
+    'species': species
+}
+response: {
+    'result': [
+        {
+            'coralname': coralname,
+            'position': position,
+            'updatetime': updatetime,
+            'light': light,
+            'temp': temp,
+            'microelement': microelement,
+            'size': size,
+            'lastmeasure': lastmeasure,
+            'growth': growth,
+            'score': score,
+            'birthtime': birthtime,
+            'adopttime': adopttime,
+            'species': species,
+        },
+        ...
+    ]
+}
+'''
+@app.route('/listcoral',methods=["POST"])
+def listcoral():
+    species = request.form['species']
+
+    corals = query_db('select * from corals where species = ?',
+        [species])
+
+    return {'result': corals}
 
 # main
 if __name__ == '__main__':

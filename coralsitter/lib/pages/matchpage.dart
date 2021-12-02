@@ -1,10 +1,12 @@
 import 'dart:math';
+import 'dart:convert';
+
 import 'package:coralsitter/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:http/http.dart' as http;
 
-import 'package:coralsitter/pages/adoptpage.dart';
 import 'package:coralsitter/widget/progressbar.dart';
 
 class AnimatedWave extends StatelessWidget {
@@ -82,13 +84,35 @@ class _MatchPageState extends State<MatchPage> {
     ),
   );
 
+  void matchSpecies() async {
+    Uri uri = Uri.parse('http://' + CommonData.server + '/match');
+    http.Response response = await http.post(
+      uri,
+      body: {
+        'tags': CommonData.me?.tags.join('-')
+      },
+    );
+    Map<dynamic, dynamic> responseData = json.decode(response.body);
+    species = CoralSpecies(
+      species: responseData['species'],
+      speciesen: responseData['speciesen'],
+      tags: responseData['tags'].split('-'),
+      classification: responseData['classification'],
+      classificationen: responseData['classificationen'],
+      difficulty: responseData['difficulty'],
+      growspeed: responseData['growspeed'],
+      current: responseData['current'],
+      light: responseData['light'],
+      feed: responseData['feed'],
+      color: responseData['color'],
+      attention: responseData['attention'].split('-'),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    species = CoralSpecies(
-      species: "气泡珊瑚",
-      en: "Plerogyra sinuosa",
-    );
+    matchSpecies();
   }
 
   @override
@@ -135,7 +159,7 @@ class _MatchPageState extends State<MatchPage> {
                   SizedBox(height: ScreenUtil().setHeight(4)),
                   // progressbar
                   PlayAnimation(
-                    duration: Duration(milliseconds: (10000).round()),
+                    duration: Duration(milliseconds: (1000).round()),
                     tween: Tween(begin: 0.0, end: 1.0),
                     builder: (context, child, double value) {
                       return progressBar(value, ScreenUtil().setWidth(70), 16);
@@ -143,7 +167,7 @@ class _MatchPageState extends State<MatchPage> {
                     onComplete: () {
                       if (species != null) {
                         Navigator.of(context).pop();
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdoptPage(species: species!,)),);
+                        Navigator.of(context).pushNamed(MyRouter.matchresult, arguments: species);
                       }
                       else {
                         status = "匹配失败";

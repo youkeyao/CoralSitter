@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:coralsitter/pages/logintextpage.dart';
 import 'package:coralsitter/common.dart';
 
 class LoginPage extends StatefulWidget {
@@ -33,9 +32,9 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               height: ScreenUtil().setHeight(5),
               margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
-              child: TextButton(
+              child: ElevatedButton(
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginTextPage(callback: widget.callback))),
+                onPressed: () => Navigator.of(context).pushNamed(MyRouter.logintext, arguments: widget.callback),
                 child: Text("Log in", style: TextStyle(fontSize: 15, color: background),)
               )
             ),

@@ -7,14 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:coralsitter/common.dart';
 
 class LoginTextPage extends StatefulWidget {
-  const LoginTextPage({ Key? key, required this.callback }) : super(key: key);
-  final Function callback;
+  const LoginTextPage({ Key? key }) : super(key: key);
 
   @override
   _LoginTextPageState createState() => _LoginTextPageState();
 }
 
 class _LoginTextPageState extends State<LoginTextPage> {
+  late Function callback;
   Color? background = Color(CommonData.themeColor);
   // focus
   final FocusNode _focusNodeUserName = FocusNode();
@@ -121,8 +121,6 @@ class _LoginTextPageState extends State<LoginTextPage> {
                 avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralname'] + '.jpg',
                 position: coral['position'],
                 updateTime: coral['updatetime'],
-                tags: coral['tags'].split('-'),
-                species: coral['species'],
                 light: coral['light'],
                 temp: coral['temp'],
                 microelement: coral['microelement'],
@@ -130,6 +128,22 @@ class _LoginTextPageState extends State<LoginTextPage> {
                 lastmeasure: coral['lastmeasure'],
                 growth: coral['growth'],
                 score: coral['score'],
+                birthtime: coral['birthtime'],
+                adopttime: coral['adopttime'],
+                species: CoralSpecies(
+                  species: coral['species']['species'],
+                  speciesen: coral['species']['speciesen'],
+                  tags: coral['species']['tags'].split('-'),
+                  classification: coral['species']['classification'],
+                  classificationen: coral['species']['classificationen'],
+                  difficulty: coral['species']['difficulty'],
+                  growspeed: coral['species']['growspeed'],
+                  current: coral['species']['current'],
+                  light: coral['species']['light'],
+                  feed: coral['species']['feed'],
+                  color: coral['species']['color'],
+                  attention: coral['species']['attention'].split('-'),
+                )
               )
             )
           });
@@ -178,7 +192,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
             )
           );*/
           Navigator.of(context).pop();
-          widget.callback();
+          callback();
         }
         else {
           _warnText = "用户名或密码错误";
@@ -226,7 +240,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
             tags: responseData['tags'].split('-'),
           );
           Navigator.of(context).pop();
-          widget.callback();
+          callback();
         }
         else {
           _warnText = "注册失败";
@@ -244,6 +258,8 @@ class _LoginTextPageState extends State<LoginTextPage> {
 
   @override
   Widget build(BuildContext context) {
+    callback = ModalRoute.of(context)?.settings.arguments as Function;
+
     Widget userInput = TextFormField(
       controller: _userNameController,
       focusNode: _focusNodeUserName,
@@ -383,7 +399,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
                   onPressed: _isLogin ? login : signUp,
                   child: Text(_isLogin ? "Log in" : "Sign up", style: TextStyle(fontSize: 15, color: background),)
-                )
+                ),
               ),
               Container(
                 height: ScreenUtil().setHeight(4),
@@ -394,7 +410,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
                       _isLogin = !_isLogin;
                     });
                   },
-                  child: Text(_isLogin ? "have no account?" : "already have an account?", style: TextStyle(fontSize: 12, color: Colors.white30),)
+                  child: Text(_isLogin ? "have no account?" : "already have an account?", style: const TextStyle(fontSize: 12, color: Colors.white30),)
                 )
               ),
             ],

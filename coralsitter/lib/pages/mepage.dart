@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/pages/settingpage.dart';
 
 Widget meItem(IconData icon, String str, Function() func) {
   return TextButton(
@@ -112,7 +111,7 @@ class _MePageState extends State<MePage> {
                   context: context,
                   tiles: [
                     meItem(Icons.payment, "珊瑚卡包", () => null),
-                    meItem(Icons.settings, "设置", () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage(callback: widget.callback))),),
+                    meItem(Icons.settings, "设置", () => Navigator.of(context).pushNamed(MyRouter.setting, arguments: widget.callback),),
                   ],
                 ).toList(),
               ),

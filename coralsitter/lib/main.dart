@@ -18,9 +18,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Coral',
-      home: BottomBar(),
+      home: const BottomBar(),
+      routes: MyRouter.routes,
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
@@ -63,8 +62,7 @@ Widget growBox(String title, String value) {
 }
 
 class CoralPage extends StatefulWidget {
-  const CoralPage({ Key? key, required this.coral }) : super(key: key);
-  final CoralInfo coral;
+  const CoralPage({ Key? key }) : super(key: key);
 
   @override
   _CoralPageState createState() => _CoralPageState();
@@ -74,6 +72,8 @@ class _CoralPageState extends State<CoralPage> {
   List<String> coralImages = ["http://via.placeholder.com/500x250", "http://via.placeholder.com/500x250", "http://via.placeholder.com/500x250"];
   @override
   Widget build(BuildContext context) {
+    CoralInfo coral = ModalRoute.of(context)?.settings.arguments as CoralInfo;
+
     Widget topArea = Stack(
       alignment: Alignment.center,
       children: [
@@ -120,7 +120,7 @@ class _CoralPageState extends State<CoralPage> {
                     onPressed: () {},
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(widget.coral.species, style: const TextStyle(fontSize: 12, color: Colors.white),),
+                  child: Text(coral.species.species, style: const TextStyle(fontSize: 12, color: Colors.white),),
                   ),
                 ),
               ],
@@ -139,7 +139,6 @@ class _CoralPageState extends State<CoralPage> {
             child: Container(
               padding: EdgeInsets.all(ScreenUtil().setWidth(1)),
               decoration: BoxDecoration(
-                // image: DecorationImage(image: NetworkImage(widget.coral.avatar)),
                 gradient: const LinearGradient(colors: [Colors.pink, Colors.blue,], begin: FractionalOffset(1, 1), end: FractionalOffset(0, 0)),
                 borderRadius: BorderRadius.circular(ScreenUtil().setWidth(13)),
               ),
@@ -149,7 +148,7 @@ class _CoralPageState extends State<CoralPage> {
                   borderRadius: BorderRadius.circular(ScreenUtil().setWidth(12)),
                 ),
                 child: ClipOval(
-                  child: Image.network(widget.coral.avatar, width: ScreenUtil().setWidth(20), height: ScreenUtil().setWidth(20),),
+                  child: Image.network(coral.avatar, width: ScreenUtil().setWidth(20), height: ScreenUtil().setWidth(20),),
                 ),
               ),
             ),
@@ -162,11 +161,11 @@ class _CoralPageState extends State<CoralPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.coral.name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+              Text(coral.name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
               SizedBox(
                 width: ScreenUtil().setWidth(40),
                 child: Text(
-                  widget.coral.tags.join(' / '),
+                  coral.species.tags.join(' / '),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 12,),
@@ -193,31 +192,31 @@ class _CoralPageState extends State<CoralPage> {
                 children: [
                   // const Text("种植位置", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
                   // const SizedBox(height: 15,),
-                  // Image.network(widget.coral.positionImage),
+                  // Image.network(coral.positionImage),
                   // const SizedBox(height: 30,),
                   const Text("每日检测", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-                  Text("更新于"+widget.coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
+                  Text("更新于"+coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
                   const SizedBox(height: 15,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      monitorBox(const Color(0xFFBBDEFB), Icons.wb_sunny_outlined, "光照强度", widget.coral.light),
-                      monitorBox(const Color(0xFFF1F8E9), Icons.waves, "海水气温", widget.coral.temp),
-                      monitorBox(const Color(0xFFFFE0B2), Icons.bubble_chart, "微量元素", widget.coral.microelement),
+                      monitorBox(const Color(0xFFBBDEFB), Icons.wb_sunny_outlined, "光照强度", coral.light),
+                      monitorBox(const Color(0xFFF1F8E9), Icons.waves, "海水气温", coral.temp),
+                      monitorBox(const Color(0xFFFFE0B2), Icons.bubble_chart, "微量元素", coral.microelement),
                     ],
                   ),
                   const SizedBox(height: 30,),
                   const Text("成长指数", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-                  Text("更新于"+widget.coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
+                  Text("更新于"+coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
                   const SizedBox(height: 15,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      growBox("大小（直径）", widget.coral.size.toString()),
+                      growBox("大小（直径）", coral.size.toString()),
                       const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
-                      growBox("距离上次测量", (widget.coral.lastmeasure > 0 ? '+' : '') + widget.coral.lastmeasure.toString()),
+                      growBox("距离上次测量", (coral.lastmeasure > 0 ? '+' : '') + coral.lastmeasure.toString()),
                       const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
-                      growBox("平均每月增长", widget.coral.growth.toString()),
+                      growBox("平均每月增长", coral.growth.toString()),
                     ],
                   ),
                   const SizedBox(height: 30,),
