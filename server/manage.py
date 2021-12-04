@@ -175,7 +175,7 @@ def match():
     return species[0]
 
 '''
-listcoral route
+listCorals route
 post: {
     'species': species
 }
@@ -183,6 +183,7 @@ response: {
     'result': [
         {
             'coralname': coralname,
+            'coralID': coralID,
             'position': position,
             'updatetime': updatetime,
             'light': light,
@@ -200,14 +201,50 @@ response: {
     ]
 }
 '''
-@app.route('/listcoral',methods=["POST"])
-def listcoral():
+@app.route('/listCorals',methods=["POST"])
+def listCorals():
     species = request.form['species']
 
     corals = query_db('select * from corals where species = ?',
         [species])
 
     return {'result': corals}
+
+'''
+adopt route
+post: {
+    'id': id
+    'username': username,
+    'coralname': coralname,
+    'position': position,
+}
+response: {
+    'success': True/False
+}
+'''
+@app.route('/adopt',methods=["POST"])
+def adopt():
+    return {'success': True}
+
+'''
+getPos route
+post: {
+}
+response: {
+    'pos': [
+        "凤凰岛西侧海域",
+        "渤海东侧海域"
+    ]
+}
+'''
+@app.route('/getPos',methods=["POST"])
+def getPos():
+    return {
+        'pos': [
+            "凤凰岛西侧海域",
+            "渤海东侧海域"
+        ]
+    }
 
 # main
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ class _MatchResultPageState extends State<MatchResultPage> {
   late CoralSpecies species;
 
   void adopt(BuildContext context, String s) async {
-    Uri uri = Uri.parse('http://' + CommonData.server + '/listcoral');
+    Uri uri = Uri.parse('http://' + CommonData.server + '/listCorals');
     http.Response response = await http.post(
       uri,
       body: {
@@ -30,6 +30,7 @@ class _MatchResultPageState extends State<MatchResultPage> {
     responseData['result'].forEach((coral) => {
       corals.add(
         CoralInfo(
+          id: coral['coralID'],
           name: coral['coralname'],
           avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralname'] + '.jpg',
           position: coral['position'],

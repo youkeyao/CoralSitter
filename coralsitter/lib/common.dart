@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:coralsitter/pages/adoptpage.dart';
 import 'package:coralsitter/pages/coralpage.dart';
+import 'package:coralsitter/pages/coralcompletepage.dart';
+import 'package:coralsitter/pages/coralidentitypage.dart';
 import 'package:coralsitter/pages/logintextpage.dart';
 import 'package:coralsitter/pages/matchpage.dart';
 import 'package:coralsitter/pages/matchresultpage.dart';
@@ -10,6 +12,8 @@ import 'package:coralsitter/pages/settingpage.dart';
 class MyRouter {
   static const adopt = 'adopt';
   static const coral = 'coral';
+  static const coralcomplete = 'coralcomplete';
+  static const coralidentity = 'coralidentity';
   static const logintext = 'logintext';
   static const match = 'match';
   static const matchresult = 'matchresult';
@@ -18,6 +22,8 @@ class MyRouter {
   static final Map<String, WidgetBuilder> routes = {
     adopt: (context) => const AdoptPage(),
     coral: (context) => const CoralPage(),
+    coralcomplete: (context) => const CoralCompletePage(),
+    coralidentity: (context) => const CoralIdentityPage(),
     logintext: (context) => const LoginTextPage(),
     match: (context) => const MatchPage(),
     matchresult: (context) => const MatchResultPage(),
@@ -50,6 +56,7 @@ class CoralSpecies {
 }
 
 class CoralInfo {
+  int id;
   String name; // 珊瑚名称
   String avatar; // 珊瑚头像
   String position; // 珊瑚地址
@@ -64,7 +71,7 @@ class CoralInfo {
   String birthtime;
   String adopttime;
   CoralSpecies species;
-  CoralInfo({required this.name, required this.avatar, required this.position, required this.updateTime, required this.light, required this.temp, required this.microelement, required this.size, required this.lastmeasure, required this.growth, required this.score, required this.birthtime, required this.adopttime, required this.species});
+  CoralInfo({required this.id, required this.name, required this.avatar, required this.position, required this.updateTime, required this.light, required this.temp, required this.microelement, required this.size, required this.lastmeasure, required this.growth, required this.score, required this.birthtime, required this.adopttime, required this.species});
 }
 
 class CommonData {

@@ -117,6 +117,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
           responseData['mycorals'].forEach((coral) => {
             CommonData.mycorals.add(
               CoralInfo(
+                id: coral['id'],
                 name: coral['coralname'],
                 avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralname'] + '.jpg',
                 position: coral['position'],

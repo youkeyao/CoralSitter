@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widget/draggablecards.dart';
@@ -71,6 +74,26 @@ class _AdoptPageState extends State<AdoptPage> {
     }
   }
 
+  void adopt() async {
+    Map requestdata = {
+      'id': corals[pos].id.toString(),
+      'username': CommonData.me!.name,
+      'coralname': "未命名",
+      'position': "未定",
+    };
+    Uri uri = Uri.parse('http://' + CommonData.server + '/adopt');
+    http.Response response = await http.post(
+      uri,
+      body: requestdata,
+    );
+    Map<dynamic, dynamic> responseData = json.decode(response.body);
+    if (responseData['success']) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      Navigator.of(context).pushNamed('coralcomplete', arguments: corals[pos].id);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -133,7 +156,7 @@ class _AdoptPageState extends State<AdoptPage> {
                     height: ScreenUtil().setHeight(5),
                     child: TextButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
-                      onPressed: () {},
+                      onPressed: () => adopt(),
                       child: Text("领养这只珊瑚", style: TextStyle(fontSize: 14, color: Color(CommonData.themeColor)),)
                     ),
                   ),
