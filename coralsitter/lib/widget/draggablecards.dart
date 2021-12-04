@@ -8,6 +8,7 @@ Widget cardContent(String url, String text) {
     children: [
       const SizedBox(),
       Card(
+        margin: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
         child: Image.network(
           url,
         ),
@@ -18,11 +19,13 @@ Widget cardContent(String url, String text) {
 }
 
 class DraggableCards extends StatefulWidget {
-  const DraggableCards({ Key? key, required this.width, required this.height, required this.urls, required this.texts }) : super(key: key);
+  const DraggableCards({ Key? key, required this.width, required this.height, required this.urls, required this.texts, required this.getPos, required this.next }) : super(key: key);
   final double width;
   final double height;
   final List<String> urls;
   final List<String> texts;
+  final Function getPos;
+  final Function next;
 
   @override
   _DraggableCardsState createState() => _DraggableCardsState();
@@ -37,14 +40,13 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
   List<String> texts = [];
   double x = 0;
   double toMove = 0;
-  int pos = 0;
 
   void changeCardsOrder() {
-    pos = (pos + 1) % widget.urls.length;
+    widget.next();
     images.removeAt(2);
-    images.insert(0, widget.urls[pos]);
+    images.insert(0, widget.urls[widget.getPos()]);
     texts.removeAt(2);
-    texts.insert(0, widget.texts[pos]);
+    texts.insert(0, widget.texts[widget.getPos()]);
   }
 
   @override
@@ -56,12 +58,10 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
     if (widget.urls.length > 2) {
       images = [widget.urls[2], widget.urls[1], widget.urls[0]];
       texts = [widget.texts[2], widget.texts[1], widget.texts[0]];
-      pos = 2;
     }
     else if (widget.urls.length == 2) {
-      images = [widget.urls[1], widget.urls[1], widget.urls[0]];
-      texts = [widget.texts[1], widget.texts[1], widget.texts[0]];
-      pos = 1;
+      images = [widget.urls[0], widget.urls[1], widget.urls[0]];
+      texts = [widget.texts[0], widget.texts[1], widget.texts[0]];
     }
     else {
       images = [widget.urls[0], widget.urls[0], widget.urls[0]];
@@ -74,30 +74,31 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
     return GestureDetector(
       onPanUpdate: (DragUpdateDetails details) {
         if (insertControl == CustomAnimationControl.stop && removeControl == CustomAnimationControl.stop) {
-          if (details.delta.dx < 0) {
-            setState(() {
-              x += details.delta.dx;
-            });
-          }
+          setState(() {
+            x += details.delta.dx;
+          });
         }
       },
       onPanEnd: (DragEndDetails details) {
         if (insertControl == CustomAnimationControl.stop && removeControl == CustomAnimationControl.stop) {
-          if (details.velocity.pixelsPerSecond.dx < -1) {
+          if (x < - widget.width * 0.1) {
             toMove = -widget.width;
+          }
+          else if (x > widget.width * 0.4) {
+            toMove = widget.width;
           }
           else {
             toMove = lefts[2] - x;
           }
           removeControl = CustomAnimationControl.playFromStart;
-          setState(() {
-          });
+          setState(() {});
         }
       },
       child: Stack(
         alignment: Alignment.center,
         children: [
           SizedBox(width: widget.width, height: widget.height,),
+          // third card
           Positioned(
             left: lefts[0],
             child: Transform.rotate(
@@ -106,6 +107,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
                 width: sizes[0].width,
                 height: sizes[0].height,
                 child: Card(
+                  elevation: 5.0,
                   margin: const EdgeInsets.all(0.0),
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
                   child: cardContent(images[0], texts[0]),
@@ -113,6 +115,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
               ),
             ),
           ),
+          // second card
           CustomAnimation(
             control: insertControl,
             duration: Duration(milliseconds: (500).round()),
@@ -126,6 +129,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
                     width: insertControl == CustomAnimationControl.playFromStart ? value * (sizes[1].width - sizes[0].width) + sizes[0].width : sizes[1].width,
                     height: insertControl == CustomAnimationControl.playFromStart ? value * (sizes[1].height - sizes[0].height) + sizes[0].height : sizes[1].height,
                     child: Card(
+                      elevation: 5.0,
                       margin: const EdgeInsets.all(0.0),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
                       child: cardContent(images[1], texts[1],),
@@ -138,6 +142,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
               insertControl = CustomAnimationControl.stop;
             },
           ),
+          // first card
           CustomAnimation(
             control: removeControl,
             duration: Duration(milliseconds: (450).round()),
@@ -148,6 +153,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
                 child: Transform.rotate(
                   angle: insertControl != CustomAnimationControl.playFromStart ? (removeControl == CustomAnimationControl.playFromStart ? (x + value * toMove - lefts[2]) * 0.0005 : (x - lefts[2]) * 0.0005) : (lefts[1] + value * (lefts[2] - lefts[1]) - lefts[2]) * 0.0005,
                   child: Card(
+                    elevation: 5.0,
                     margin: const EdgeInsets.all(0.0),
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
                     child: SizedBox(
@@ -160,7 +166,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
               );
             },
             onComplete: () {
-              if (insertControl == CustomAnimationControl.playFromStart || toMove != -widget.width) {
+              if (insertControl == CustomAnimationControl.playFromStart || (toMove != -widget.width && toMove != widget.width)) {
                 removeControl = CustomAnimationControl.stop;
                 x = lefts[2];
               }
@@ -169,8 +175,6 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
                 removeControl = CustomAnimationControl.playFromStart;
                 insertControl = CustomAnimationControl.playFromStart;
               }
-              setState(() {
-              });
             },
           ),
         ],

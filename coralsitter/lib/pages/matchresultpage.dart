@@ -15,6 +15,8 @@ class MatchResultPage extends StatefulWidget {
 }
 
 class _MatchResultPageState extends State<MatchResultPage> {
+  late CoralSpecies species;
+
   void adopt(BuildContext context, String s) async {
     Uri uri = Uri.parse('http://' + CommonData.server + '/listcoral');
     http.Response response = await http.post(
@@ -24,11 +26,32 @@ class _MatchResultPageState extends State<MatchResultPage> {
       },
     );
     Map<dynamic, dynamic> responseData = json.decode(response.body);
-    Navigator.of(context).pushNamed(MyRouter.adopt, arguments: responseData['result']);
+    List<CoralInfo> corals = [];
+    responseData['result'].forEach((coral) => {
+      corals.add(
+        CoralInfo(
+          name: coral['coralname'],
+          avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralname'] + '.jpg',
+          position: coral['position'],
+          updateTime: coral['updatetime'],
+          light: coral['light'],
+          temp: coral['temp'],
+          microelement: coral['microelement'],
+          size: coral['size'],
+          lastmeasure: coral['lastmeasure'],
+          growth: coral['growth'],
+          score: coral['score'],
+          birthtime: coral['birthtime'],
+          adopttime: coral['adopttime'],
+          species: species,
+        )
+      )
+    });
+    Navigator.of(context).pushNamed(MyRouter.adopt, arguments: corals);
   }
   @override
   Widget build(BuildContext context) {
-    CoralSpecies species = ModalRoute.of(context)?.settings.arguments as CoralSpecies;
+    species = ModalRoute.of(context)?.settings.arguments as CoralSpecies;
 
     return ScreenUtilInit(
       designSize: const Size(100, 100),
@@ -62,9 +85,10 @@ class _MatchResultPageState extends State<MatchResultPage> {
               child: Column(
                 children: [
                   speciesCard(species),
-                  SizedBox(height: ScreenUtil().setHeight(2),),
+                  SizedBox(height: ScreenUtil().setHeight(4),),
                   SizedBox(
                     width: ScreenUtil().setWidth(85),
+                    height: ScreenUtil().setHeight(5),
                     child: TextButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
                       onPressed: () => adopt(context, species.species),
@@ -72,7 +96,7 @@ class _MatchResultPageState extends State<MatchResultPage> {
                     ),
                   ),
                   Container(
-                    height: 32,
+                    height: ScreenUtil().setHeight(5),
                     margin: const EdgeInsets.all(0.0),
                     child: TextButton(
                       onPressed: () {
