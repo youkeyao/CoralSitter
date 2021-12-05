@@ -36,7 +36,7 @@ CREATE TABLE coralspecies(
     current CHAR[5] NOT NULL,
     light CHAR[5] NOT NULL,
     feed CHAR[5] NOT NULL,
-    color CHAR[5] NOT NULL,
+    color CHAR[15] NOT NULL,
     attention CHAR[50] NOT NULL,
     PRIMARY KEY(species)
 );

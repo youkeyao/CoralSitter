@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:coralsitter/widgets/serverdialog.dart';
 import 'package:coralsitter/common.dart';
 
 class LoginTextPage extends StatefulWidget {
@@ -16,6 +15,7 @@ class LoginTextPage extends StatefulWidget {
 class _LoginTextPageState extends State<LoginTextPage> {
   late Function callback;
   Color? background = Color(CommonData.themeColor);
+  final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
   // focus
   final FocusNode _focusNodeUserName = FocusNode();
   final FocusNode _focusNodePassWord = FocusNode();
@@ -28,7 +28,6 @@ class _LoginTextPageState extends State<LoginTextPage> {
   String _username = '';
   String _password = '';
   String _confirmPwd = '';
-  String _warnText = '';
   bool _isShowPwd = false;
   bool _isShowConfirmPwd = false;
   bool _isShowClear = false;
@@ -77,13 +76,6 @@ class _LoginTextPageState extends State<LoginTextPage> {
     }
   }
 
-  String? validateNull(value){
-    if (value.isEmpty) {
-      return '输入不能为空';
-    }
-    return null;
-  }
-
   void login() async {
     _focusNodePassWord.unfocus();
     _focusNodeUserName.unfocus();
@@ -91,122 +83,64 @@ class _LoginTextPageState extends State<LoginTextPage> {
 
     _formKey.currentState!.save();
     if (_username == '' || _password == '') {
-      _warnText = "输入不能为空";
+      Fluttertoast.showToast(msg: '输入不能为空');
     }
     else {
-      try {
-        Uri uri = Uri.parse('http://' + CommonData.server + '/login');
-        http.Response response = await http.post(
-          uri,
-          body: {
-            'username': _username,
-            'password': _password
-          },
-        );
-        Map<dynamic, dynamic> responseData = json.decode(response.body);
+      Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/login', {
+        'username': _username,
+        'password': _password
+      });
 
-        if (responseData['success']) {
-          // CommonData.me = UserInfo(name: "Dolnna", avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c", sign: "今天也是热爱珊瑚的一天");
-          // CommonData.me?.tags = ["外向开朗", "热情", "心思细腻"];
-          CommonData.me = UserInfo(
-            name: responseData['username'],
-            avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['username'] + '.jpg',
-            sign: responseData['sign'],
-            tags: responseData['tags'].split('-'),
-          );
-          responseData['mycorals'].forEach((coral) => {
-            CommonData.mycorals.add(
-              CoralInfo(
-                id: coral['id'],
-                name: coral['coralname'],
-                avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralname'] + '.jpg',
-                position: coral['position'],
-                updateTime: coral['updatetime'],
-                light: coral['light'],
-                temp: coral['temp'],
-                microelement: coral['microelement'],
-                size: coral['size'],
-                lastmeasure: coral['lastmeasure'],
-                growth: coral['growth'],
-                score: coral['score'],
-                birthtime: coral['birthtime'],
-                adopttime: coral['adopttime'],
-                species: CoralSpecies(
-                  species: coral['species']['species'],
-                  speciesen: coral['species']['speciesen'],
-                  tags: coral['species']['tags'].split('-'),
-                  classification: coral['species']['classification'],
-                  classificationen: coral['species']['classificationen'],
-                  difficulty: coral['species']['difficulty'],
-                  growspeed: coral['species']['growspeed'],
-                  current: coral['species']['current'],
-                  light: coral['species']['light'],
-                  feed: coral['species']['feed'],
-                  color: coral['species']['color'],
-                  attention: coral['species']['attention'].split('-'),
-                )
-              )
-            )
-          });
-          /*CommonData.mycorals.add(
-            CoralInfo(
-              name: "泡泡",
-              avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c",
-              position: "凤凰岛西侧海域",
-              tags: "好强 / 敏感 / 易碎 / 丰满 / 易满足",
-              score: 96,
-              updateTime: "2020.12.10",
-              positionImage: "http://via.placeholder.com/500x250",
-              species: "气泡珊瑚",
-              monitor: {
-                "光照强度": "充足",
-                "海水气温": "温暖",
-                "微量元素": "偏少"
-              },
-              grow: {
-                "大小": "14",
-                "距离上次测量": "+0.2",
-                "平均每月增长": "0.15",
-              },
-            )
-          );
+      if (responseData['success'] == null) return;
+
+      if (responseData['success']) {
+        CommonData.me = UserInfo(
+          name: responseData['username'],
+          avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['username'] + '.jpg',
+          sign: responseData['sign'],
+          tags: responseData['tags'].split('-'),
+        );
+        responseData['mycorals'].forEach((coral) => {
           CommonData.mycorals.add(
             CoralInfo(
-              name: "嘻嘻",
-              avatar: "https://pic1.zhimg.com/v2-45cb7bd2ae4a16036acbebe4f2677560_r.jpg?source=1940ef5c",
-              position: "渤海海域东侧",
-              tags: "好强 / 敏感 / 易碎 / 丰满 / 易满足",
-              score: 89,
-              updateTime: "2020.12.10",
-              positionImage: "http://via.placeholder.com/500x250",
-              species: "气泡珊瑚",
-              monitor: {
-                "光照强度": "充足",
-                "海水气温": "温暖",
-                "微量元素": "偏少"
-              },
-              grow: {
-                "大小": "14",
-                "距离上次测量": "+0.2",
-                "平均每月增长": "0.15",
-              },
+              id: coral['id'],
+              name: coral['coralname'],
+              avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralname'] + '.jpg',
+              position: coral['position'],
+              updateTime: coral['updatetime'],
+              light: coral['light'],
+              temp: coral['temp'],
+              microelement: coral['microelement'],
+              size: coral['size'],
+              lastmeasure: coral['lastmeasure'],
+              growth: coral['growth'],
+              score: coral['score'],
+              birthtime: coral['birthtime'],
+              adopttime: coral['adopttime'],
+              species: CoralSpecies(
+                species: coral['species']['species'],
+                speciesen: coral['species']['speciesen'],
+                tags: coral['species']['tags'].split('-'),
+                classification: coral['species']['classification'],
+                classificationen: coral['species']['classificationen'],
+                difficulty: coral['species']['difficulty'],
+                growspeed: coral['species']['growspeed'],
+                current: coral['species']['current'],
+                light: coral['species']['light'],
+                feed: coral['species']['feed'],
+                color: coral['species']['color'],
+                attention: coral['species']['attention'].split('-'),
+              )
             )
-          );*/
-          Navigator.of(context).pop();
-          callback();
-        }
-        else {
-          _warnText = "用户名或密码错误";
-        }
+          )
+        });
+        Navigator.of(context).pop();
+        callback();
       }
-      catch(e) {
-        _warnText = "连接服务器失败";
-        print(e);
+      else{
+        Fluttertoast.showToast(msg: '用户名或密码错误');
       }
     }
-    
-    setState(() {
-    });
   }
 
   void signUp() async {
@@ -216,45 +150,33 @@ class _LoginTextPageState extends State<LoginTextPage> {
 
     _formKey.currentState!.save();
     if (_username == '' || _password == '' || _confirmPwd == '') {
-      _warnText = "输入不能为空";
+      Fluttertoast.showToast(msg: '输入不能为空');
     }
     else if (_password != _confirmPwd) {
-      _warnText = "输入密码不一致";
+      Fluttertoast.showToast(msg: '输入密码不一致');
     }
     else {
-      try {
-        Uri uri = Uri.parse('http://' + CommonData.server + '/signup');
-        http.Response response = await http.post(
-          uri,
-          body: {
-            'username': _username,
-            'password': _password
-          },
-        );
-        Map<dynamic, dynamic> responseData = json.decode(response.body);
+      Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/signup', {
+        'username': _username,
+        'password': _password
+      });
 
-        if (responseData['success']) {
-          CommonData.me = UserInfo(
-            name: responseData['username'],
-            avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['username'] + '.jpg',
-            sign: responseData['sign'],
-            tags: responseData['tags'].split('-'),
-          );
-          Navigator.of(context).pop();
-          callback();
-        }
-        else {
-          _warnText = "注册失败";
-        }
+      if (responseData['success'] == null) return;
+
+      if (responseData['success']) {
+        CommonData.me = UserInfo(
+          name: responseData['username'],
+          avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['username'] + '.jpg',
+          sign: responseData['sign'],
+          tags: responseData['tags'].split('-'),
+        );
+        Navigator.of(context).pop();
+        callback();
       }
-      catch(e) {
-        _warnText = "连接服务器失败";
-        print(e);
+      else {
+        Fluttertoast.showToast(msg: '注册失败');
       }
     }
-
-    setState(() {
-    });
   }
 
   @override
@@ -363,58 +285,56 @@ class _LoginTextPageState extends State<LoginTextPage> {
             _focusNodeUserName.unfocus();
             _focusNodeConfirmPassWord.unfocus();
           },
-          child: ListView(
-            children: <Widget>[
-              SizedBox(height: ScreenUtil().setHeight(8),),
-              Image(image: const AssetImage('assets/icons/icon.png'), height: ScreenUtil().setHeight(20),),
-              SizedBox(height: ScreenUtil().setHeight(8),),
-              // input
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  color: background
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      userInput,
-                      pswInput,
-                      _isLogin ? const SizedBox() : confirmPswInput,
-                      Container(
-                        width: ScreenUtil().setWidth(90),
-                        margin: EdgeInsets.all(ScreenUtil().setHeight(1)),
-                        child: Text(_warnText, textAlign: TextAlign.left, style: const TextStyle(color: Color(0xffff1100), fontSize: 14),),
-                      ),
-                    ],
+          child: ServerDialog(
+            key: childkey,
+            child: ListView(
+              children: [
+                SizedBox(height: ScreenUtil().setHeight(8),),
+                Image(image: const AssetImage('assets/icons/icon.png'), height: ScreenUtil().setHeight(20),),
+                SizedBox(height: ScreenUtil().setHeight(8),),
+                // input
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    color: background
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        userInput,
+                        pswInput,
+                        _isLogin ? const SizedBox() : confirmPswInput,
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: ScreenUtil().setHeight(5),),
-              // login button
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
-                child: TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
-                  onPressed: _isLogin ? login : signUp,
-                  child: Text(_isLogin ? "Log in" : "Sign up", style: TextStyle(fontSize: 15, color: background),)
+                SizedBox(height: ScreenUtil().setHeight(5),),
+                // login button
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
+                  child: TextButton(
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
+                    onPressed: _isLogin ? login : signUp,
+                    child: Text(_isLogin ? "Log in" : "Sign up", style: TextStyle(fontSize: 15, color: background),)
+                  ),
                 ),
-              ),
-              Container(
-                height: ScreenUtil().setHeight(4),
-                margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                    });
-                  },
-                  child: Text(_isLogin ? "have no account?" : "already have an account?", style: const TextStyle(fontSize: 12, color: Colors.white30),)
-                )
-              ),
-            ],
+                Container(
+                  height: ScreenUtil().setHeight(4),
+                  margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLogin = !_isLogin;
+                      });
+                    },
+                    child: Text(_isLogin ? "have no account?" : "already have an account?", style: const TextStyle(fontSize: 12, color: Colors.white30),)
+                  )
+                ),
+              ],
+            ),
           ),
         ),
       ),

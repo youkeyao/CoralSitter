@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_animations/simple_animations.dart';
-import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/widget/draggablecards.dart';
+import 'package:coralsitter/widgets/draggablecards.dart';
+import 'package:coralsitter/widgets/serverdialog.dart';
 
 Widget infoBox(String title, String content, String unit, CustomAnimationControl control, Function render) {
   return Container(
@@ -57,6 +56,8 @@ class AdoptPage extends StatefulWidget {
 }
 
 class _AdoptPageState extends State<AdoptPage> {
+  final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
+
   CustomAnimationControl control = CustomAnimationControl.stop;
   List corals = [];
   int pos = 0;
@@ -75,22 +76,24 @@ class _AdoptPageState extends State<AdoptPage> {
   }
 
   void adopt() async {
-    Map requestdata = {
+    Map requestData = {
       'id': corals[pos].id.toString(),
       'username': CommonData.me!.name,
       'coralname': "未命名",
       'position': "未定",
     };
-    Uri uri = Uri.parse('http://' + CommonData.server + '/adopt');
-    http.Response response = await http.post(
-      uri,
-      body: requestdata,
-    );
-    Map<dynamic, dynamic> responseData = json.decode(response.body);
+    Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/adopt', requestData);
+
+    if (responseData['success'] == null) return;
+
     if (responseData['success']) {
+      List positions = (await childkey.currentState!.post('/getPos', requestData))['pos'];
       Navigator.of(context).pop();
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed('coralcomplete', arguments: corals[pos].id);
+      Navigator.of(context).pushNamed('coralcomplete', arguments: {'id': corals[pos].id, 'pos': positions});
+    }
+    else {
+      Fluttertoast.showToast(msg: '领养失败');
     }
   }
 
@@ -117,55 +120,58 @@ class _AdoptPageState extends State<AdoptPage> {
       designSize: const Size(100, 100),
       builder: () => Scaffold(
         backgroundColor: Color(CommonData.themeColor),
-        body: Stack(
-          alignment: Alignment.center,
-          children: [
-            // background
-            Positioned(
-              top: 0,
-              child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
-            ),
-            // top bar
-            const Positioned(
-              top: 25,
-              child: Text('匹配珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
-            ),
-            Positioned(
-              top: ScreenUtil().setHeight(10),
-              child: DraggableCards(
-                width: ScreenUtil().setWidth(100),
-                height: ScreenUtil().setHeight(56),
-                urls: corals.map((coral) => coral.avatar as String).toList(),
-                texts: corals.map((coral) => coral.birthtime as String).toList(),
-                getPos: () => (pos+3) % corals.length,
-                next: next,
+        body: ServerDialog(
+          key: childkey,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // background
+              Positioned(
+                top: 0,
+                child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: ScreenUtil().setWidth(7.5),
-              width: ScreenUtil().setWidth(85),
-              child: Column(
-                children: [
-                  infoArea,
-                  SizedBox(height: ScreenUtil().setHeight(3),),
-                  const Divider(height: 5, color: Colors.white,),
-                  SizedBox(height: ScreenUtil().setHeight(4),),
-                  SizedBox(
-                    width: ScreenUtil().setWidth(85),
-                    height: ScreenUtil().setHeight(5),
-                    child: TextButton(
-                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
-                      onPressed: () => adopt(),
-                      child: Text("领养这只珊瑚", style: TextStyle(fontSize: 14, color: Color(CommonData.themeColor)),)
+              // top bar
+              const Positioned(
+                top: 34,
+                child: Text('匹配珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
+              ),
+              Positioned(
+                top: ScreenUtil().setHeight(10),
+                child: DraggableCards(
+                  width: ScreenUtil().setWidth(100),
+                  height: ScreenUtil().setHeight(56),
+                  urls: corals.map((coral) => coral.avatar as String).toList(),
+                  texts: corals.map((coral) => coral.birthtime as String).toList(),
+                  getPos: () => (pos+3) % corals.length,
+                  next: next,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: ScreenUtil().setWidth(7.5),
+                width: ScreenUtil().setWidth(85),
+                child: Column(
+                  children: [
+                    infoArea,
+                    SizedBox(height: ScreenUtil().setHeight(3),),
+                    const Divider(height: 5, color: Colors.white,),
+                    SizedBox(height: ScreenUtil().setHeight(4),),
+                    SizedBox(
+                      width: ScreenUtil().setWidth(85),
+                      height: ScreenUtil().setHeight(5),
+                      child: TextButton(
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
+                        onPressed: () => adopt(),
+                        child: Text("领养这只珊瑚", style: TextStyle(fontSize: 14, color: Color(CommonData.themeColor)),)
+                      ),
                     ),
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(8),),
-                ],
+                    SizedBox(height: ScreenUtil().setHeight(8),),
+                  ],
+                ),
               ),
-            ),
-          ],
-        )
+            ],
+          ),
+        ),
       ),
     );
   }

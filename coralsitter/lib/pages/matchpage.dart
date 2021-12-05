@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:coralsitter/widget/progressbar.dart';
+import 'package:coralsitter/widgets/progressbar.dart';
 
 class AnimatedWave extends StatelessWidget {
   const AnimatedWave({Key? key, required this.height, required this.speed, this.offset = 0.0}) : super(key: key);

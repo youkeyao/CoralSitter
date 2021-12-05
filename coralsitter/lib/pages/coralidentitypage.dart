@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/widget/draggablecards.dart';
+import 'package:coralsitter/widgets/draggablecards.dart';
 
 class CoralIdentityPage extends StatefulWidget {
   const CoralIdentityPage({ Key? key }) : super(key: key);
@@ -36,10 +36,9 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
             ),
             // top bar
             const Positioned(
-              top: 25,
-              child: Text('匹配珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
+              top: 34,
+              child: Text('珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
             ),
-            
           ],
         )
       ),

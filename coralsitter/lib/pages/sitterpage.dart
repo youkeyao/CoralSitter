@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:reorderables/reorderables.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/widget/coralcard.dart';
+import 'package:coralsitter/widgets/coralcard.dart';
 
 class SitterPage extends StatefulWidget {
   const SitterPage({ Key? key }) : super(key: key);

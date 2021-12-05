@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/widget/swipercards.dart';
+import 'package:coralsitter/widgets/swipercards.dart';
 
 Widget monitorBox(Color color, IconData icon, String indicator, String value) {
   return Stack(

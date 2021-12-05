@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/widget/coralcard.dart';
-import 'package:coralsitter/widget/swipercards.dart';
-import 'package:coralsitter/cardswiper.dart';
-import 'package:coralsitter/alignment.dart';
+import 'package:coralsitter/widgets/coralcard.dart';
+import 'package:coralsitter/widgets/swipercards.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({ Key? key }) : super(key: key);
