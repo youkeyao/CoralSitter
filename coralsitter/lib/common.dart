@@ -8,6 +8,7 @@ import 'package:coralsitter/pages/logintextpage.dart';
 import 'package:coralsitter/pages/matchpage.dart';
 import 'package:coralsitter/pages/matchresultpage.dart';
 import 'package:coralsitter/pages/settingpage.dart';
+import 'package:coralsitter/pages/speciespage.dart';
 
 class MyRouter {
   static const adopt = 'adopt';
@@ -18,6 +19,7 @@ class MyRouter {
   static const match = 'match';
   static const matchresult = 'matchresult';
   static const setting = 'setting';
+  static const species = 'species';
 
   static final Map<String, WidgetBuilder> routes = {
     adopt: (context) => const AdoptPage(),
@@ -28,6 +30,7 @@ class MyRouter {
     match: (context) => const MatchPage(),
     matchresult: (context) => const MatchResultPage(),
     setting: (context) => const SettingPage(),
+    species: (contet) => const SpeciesPage(),
   };
 }
 

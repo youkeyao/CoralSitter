@@ -117,7 +117,7 @@ class _CoralPageState extends State<CoralPage> {
                           width: 1),
                         ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {Navigator.of(context).pushNamed('species', arguments: coral.species);},
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(coral.species.species, style: const TextStyle(fontSize: 12, color: Colors.white),),
