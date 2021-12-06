@@ -22,7 +22,15 @@ class _SettingPageState extends State<SettingPage> {
         appBar: AppBar(
           elevation: 0.0,
           toolbarHeight: ScreenUtil().setHeight(7),
-          title: const Text("设置"),
+          leadingWidth: ScreenUtil().setWidth(15),
+          leading: Container(
+            margin: EdgeInsets.only(left: ScreenUtil().setWidth(4.5)),
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icon(Icons.keyboard_arrow_left, color: Colors.black, size: ScreenUtil().setHeight(4),),
+            ),
+          ),
+          title: Text("设置", style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), fontWeight: FontWeight.bold,),),
           centerTitle: true,
           backgroundColor: Colors.grey[100],
           foregroundColor: Colors.black,

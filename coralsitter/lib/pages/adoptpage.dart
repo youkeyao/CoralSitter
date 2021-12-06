@@ -88,9 +88,12 @@ class _AdoptPageState extends State<AdoptPage> {
 
     if (responseData['success']) {
       List positions = (await childkey.currentState!.post('/getPos', requestData))['pos'];
+      corals[pos].name = "未命名";
+      corals[pos].position = positions[0];
+      CommonData.mycorals.add(corals[pos]);
       Navigator.of(context).pop();
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed('coralcomplete', arguments: {'coral': corals[pos], 'pos': positions});
+      Navigator.of(context).pushNamed(MyRouter.coralcomplete, arguments: {'coral': corals[pos], 'pos': positions});
     }
     else {
       Fluttertoast.showToast(msg: '领养失败');

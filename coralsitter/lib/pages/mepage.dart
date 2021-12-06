@@ -110,7 +110,7 @@ class _MePageState extends State<MePage> {
                 children: ListTile.divideTiles(
                   context: context,
                   tiles: [
-                    meItem(Icons.payment, "珊瑚卡包", () => null),
+                    meItem(Icons.payment, "珊瑚卡包", () => Navigator.of(context).pushNamed(MyRouter.coralcards)),
                     meItem(Icons.settings, "设置", () => Navigator.of(context).pushNamed(MyRouter.setting, arguments: widget.callback),),
                   ],
                 ).toList(),

@@ -102,7 +102,7 @@ class _CoralPageState extends State<CoralPage> {
               children: [
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white,),
+                  icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: ScreenUtil().setHeight(4),),
                 ),
                 TextButton(
                     style: ButtonStyle(
@@ -117,7 +117,7 @@ class _CoralPageState extends State<CoralPage> {
                           width: 1),
                         ),
                     ),
-                    onPressed: () {Navigator.of(context).pushNamed('species', arguments: coral.species);},
+                    onPressed: () => Navigator.of(context).pushNamed(MyRouter.species, arguments: coral.species),
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(coral.species.species, style: const TextStyle(fontSize: 12, color: Colors.white),),

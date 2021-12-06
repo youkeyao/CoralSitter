@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
-Widget coralCard(CoralInfo coral, BuildContext context, {int key=0}) {
+Widget coralBox(CoralInfo coral, BuildContext context, {int key=0}) {
   return Card(
     key: ValueKey(key),
     margin: const EdgeInsets.all(0.0),

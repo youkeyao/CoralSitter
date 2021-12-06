@@ -39,9 +39,8 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
     if (responseData['success']) {
       coral.name = _controller.text;
       coral.position = pos;
-      CommonData.mycorals.add(coral);
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed('coralidentity', arguments: coral);
+      Navigator.of(context).pushNamed(MyRouter.coralidentity, arguments: coral);
     }
     else {
       Fluttertoast.showToast(msg: '登记失败');

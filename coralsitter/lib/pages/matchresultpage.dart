@@ -81,7 +81,7 @@ class _MatchResultPageState extends State<MatchResultPage> {
                 left: ScreenUtil().setWidth(4.5),
                 child: IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white,),
+                  icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: ScreenUtil().setHeight(4),),
                 ),
               ),
               Positioned(

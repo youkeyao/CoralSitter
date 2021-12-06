@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/widgets/coralcard.dart';
+import 'package:coralsitter/widgets/coralbox.dart';
 import 'package:coralsitter/widgets/swipercards.dart';
 
 class HomePage extends StatefulWidget {
@@ -95,12 +95,12 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const Text("我的珊瑚", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).pushNamed(MyRouter.coralcards),
                   child: const Text("查看更多", style: TextStyle(fontSize: 12, color: Colors.grey),)
                 ),
               ],
             ),
-            coral == null ? const SizedBox() : coralCard(coral!, context),
+            coral == null ? const SizedBox() : coralBox(coral!, context),
             const SizedBox(height: 30),
             // adopt coral
             const Text("领养珊瑚", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),

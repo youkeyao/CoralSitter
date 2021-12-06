@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:reorderables/reorderables.dart';
 
 import 'package:coralsitter/common.dart';
-import 'package:coralsitter/widgets/coralcard.dart';
+import 'package:coralsitter/widgets/coralbox.dart';
 
 class SitterPage extends StatefulWidget {
   const SitterPage({ Key? key }) : super(key: key);
@@ -21,7 +21,7 @@ class _SitterPageState extends State<SitterPage> {
   List<Widget> buildMyCorals(BuildContext context) {
     List<Widget> widgets = [const SizedBox(height: 10, key: ValueKey(0),)];
     for (int i = 0; i < CommonData.mycorals.length; i ++) {
-      widgets.add(coralCard(CommonData.mycorals[i], context, key: 2*i+1,),);
+      widgets.add(coralBox(CommonData.mycorals[i], context, key: 2*i+1,),);
       widgets.add(SizedBox(height: 20, key: ValueKey(2*i)));
     }
     return widgets;

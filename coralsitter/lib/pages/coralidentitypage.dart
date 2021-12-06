@@ -138,6 +138,14 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
               child: Text('珊瑚身份证', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
             ),
             Positioned(
+                top: ScreenUtil().setHeight(3.5),
+                left: ScreenUtil().setWidth(4.5),
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: ScreenUtil().setHeight(4),),
+                ),
+              ),
+            Positioned(
               bottom: 0,
               left: ScreenUtil().setWidth(7.5),
               width: ScreenUtil().setWidth(85),
@@ -145,7 +153,7 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
                 children: [
                   Container(
                     width: ScreenUtil().setWidth(85),
-                    height: ScreenUtil().setHeight(70),
+                    height: ScreenUtil().setHeight(76),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Colors.white
@@ -163,23 +171,26 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
                           data: sprintf("%015d", [coral.id]),
                           drawText: true,
                           color: const Color(0xFF1A237E),
-                          backgroundColor: Colors.grey[200],
                           textPadding: ScreenUtil().setHeight(1.5),
                           style: TextStyle(letterSpacing: ScreenUtil().setWidth(1.5)),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10.0)
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: ScreenUtil().setHeight(4),),
-                  SizedBox(
-                    width: ScreenUtil().setWidth(85),
-                    height: ScreenUtil().setHeight(5),
-                    child: TextButton(
-                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
-                      onPressed: () {Navigator.of(context).pop();},
-                      child: Text("返回首页", style: TextStyle(fontSize: 14, color: Color(CommonData.themeColor)),)
-                    ),
-                  ),
+                  // SizedBox(height: ScreenUtil().setHeight(4),),
+                  // SizedBox(
+                  //   width: ScreenUtil().setWidth(85),
+                  //   height: ScreenUtil().setHeight(5),
+                  //   child: TextButton(
+                  //     style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
+                  //     onPressed: () {Navigator.of(context).pop();},
+                  //     child: Text("返回", style: TextStyle(fontSize: 14, color: Color(CommonData.themeColor)),)
+                  //   ),
+                  // ),
                   SizedBox(height: ScreenUtil().setHeight(8),),
                 ],
               ),

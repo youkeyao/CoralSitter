@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:coralsitter/pages/adoptpage.dart';
 import 'package:coralsitter/pages/coralpage.dart';
+import 'package:coralsitter/pages/coralcardspage.dart';
 import 'package:coralsitter/pages/coralcompletepage.dart';
 import 'package:coralsitter/pages/coralidentitypage.dart';
 import 'package:coralsitter/pages/logintextpage.dart';
@@ -13,6 +14,7 @@ import 'package:coralsitter/pages/speciespage.dart';
 class MyRouter {
   static const adopt = 'adopt';
   static const coral = 'coral';
+  static const coralcards = 'coralcards';
   static const coralcomplete = 'coralcomplete';
   static const coralidentity = 'coralidentity';
   static const logintext = 'logintext';
@@ -24,6 +26,7 @@ class MyRouter {
   static final Map<String, WidgetBuilder> routes = {
     adopt: (context) => const AdoptPage(),
     coral: (context) => const CoralPage(),
+    coralcards: (context) => const CoralCardsPage(),
     coralcomplete: (context) => const CoralCompletePage(),
     coralidentity: (context) => const CoralIdentityPage(),
     logintext: (context) => const LoginTextPage(),
