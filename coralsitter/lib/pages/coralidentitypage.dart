@@ -139,7 +139,7 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
             ),
             Positioned(
                 top: ScreenUtil().setHeight(3.5),
-                left: ScreenUtil().setWidth(4.5),
+                left: ScreenUtil().setWidth(3),
                 child: IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: ScreenUtil().setHeight(4),),

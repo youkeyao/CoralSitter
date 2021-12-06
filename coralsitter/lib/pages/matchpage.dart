@@ -1,12 +1,12 @@
 import 'dart:math';
 import 'dart:convert';
 
-import 'package:coralsitter/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/progressbar.dart';
 
 class AnimatedWave extends StatelessWidget {
@@ -92,6 +92,9 @@ class _MatchPageState extends State<MatchPage> {
         'tags': CommonData.me?.tags.join('-')
       },
     );
+
+    if (response.statusCode == 404) return;
+
     Map<dynamic, dynamic> responseData = json.decode(response.body);
     species = CoralSpecies(
       species: responseData['species'],
@@ -162,12 +165,12 @@ class _MatchPageState extends State<MatchPage> {
                     duration: Duration(milliseconds: (1000).round()),
                     tween: Tween(begin: 0.0, end: 1.0),
                     builder: (context, child, double value) {
-                      return progressBar(value, ScreenUtil().setWidth(70), 16);
+                      return progressBar(value, ScreenUtil().setWidth(70), ScreenUtil().setHeight(2));
                     },
                     onComplete: () {
                       if (species != null) {
                         Navigator.of(context).pop();
-                        Navigator.of(context).pushNamed(MyRouter.matchresult, arguments: species);
+                        Navigator.of(context).pushNamed(MyRouter.coralresult, arguments: species);
                       }
                       else {
                         status = "匹配失败";

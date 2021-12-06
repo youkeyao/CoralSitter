@@ -6,14 +6,14 @@ import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/speciescard.dart';
 import 'package:coralsitter/widgets/serverdialog.dart';
 
-class MatchResultPage extends StatefulWidget {
-  const MatchResultPage({ Key? key }) : super(key: key);
+class CoralResultPage extends StatefulWidget {
+  const CoralResultPage({ Key? key }) : super(key: key);
 
   @override
-  _MatchResultPageState createState() => _MatchResultPageState();
+  _CoralResultPageState createState() => _CoralResultPageState();
 }
 
-class _MatchResultPageState extends State<MatchResultPage> {
+class _CoralResultPageState extends State<CoralResultPage> {
   final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
   late CoralSpecies species;
 
@@ -74,11 +74,11 @@ class _MatchResultPageState extends State<MatchResultPage> {
               // top bar
               Positioned(
                 top: ScreenUtil().setHeight(4.8),
-                child: Text('匹配珊瑚', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
+                child: Text('珊瑚特征', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
               ),
               Positioned(
                 top: ScreenUtil().setHeight(3.5),
-                left: ScreenUtil().setWidth(4.5),
+                left: ScreenUtil().setWidth(3),
                 child: IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: ScreenUtil().setHeight(4),),

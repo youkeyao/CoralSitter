@@ -63,7 +63,6 @@ class ServerDialogState extends State<ServerDialog> {
             borderRadius: BorderRadius.circular(4.0),
           ),
           child: Container(
-            // padding: const EdgeInsets.only(left:20.0),
             alignment: Alignment.center,
             width: 50.0,
             height: 50.0,
@@ -73,13 +72,6 @@ class ServerDialogState extends State<ServerDialog> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 widget.progress,
-                // Container(
-                //   margin: const EdgeInsets.only(left:20.0),
-                //   child: Text(
-                //     '正在加载...',
-                //     style: TextStyle(color: widget.textColor, fontSize: 16.0),
-                //   ),
-                // ),
               ],
             ),
           ),

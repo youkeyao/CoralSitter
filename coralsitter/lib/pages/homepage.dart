@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 120, child: VerticalDivider(color: Colors.grey, width: 1,)),
             TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pushNamed(MyRouter.choosebox),
               child: Column(
                 children: [
                   const Text("抽选盲盒", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),

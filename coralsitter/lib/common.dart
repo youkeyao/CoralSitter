@@ -1,37 +1,46 @@
 import 'package:flutter/material.dart';
 
 import 'package:coralsitter/pages/adoptpage.dart';
-import 'package:coralsitter/pages/coralpage.dart';
+import 'package:coralsitter/pages/boxresultpage.dart';
+import 'package:coralsitter/pages/chooseboxpage.dart';
 import 'package:coralsitter/pages/coralcardspage.dart';
 import 'package:coralsitter/pages/coralcompletepage.dart';
 import 'package:coralsitter/pages/coralidentitypage.dart';
+import 'package:coralsitter/pages/coralpage.dart';
+import 'package:coralsitter/pages/coralresultpage.dart';
 import 'package:coralsitter/pages/logintextpage.dart';
 import 'package:coralsitter/pages/matchpage.dart';
-import 'package:coralsitter/pages/matchresultpage.dart';
+import 'package:coralsitter/pages/openboxpage.dart';
 import 'package:coralsitter/pages/settingpage.dart';
 import 'package:coralsitter/pages/speciespage.dart';
 
 class MyRouter {
   static const adopt = 'adopt';
-  static const coral = 'coral';
+  static const boxresult = 'boxresult';
+  static const choosebox = 'choosebox';
   static const coralcards = 'coralcards';
   static const coralcomplete = 'coralcomplete';
   static const coralidentity = 'coralidentity';
+  static const coral = 'coral';
+  static const coralresult = 'coralresult';
   static const logintext = 'logintext';
   static const match = 'match';
-  static const matchresult = 'matchresult';
+  static const openbox = 'openbox';
   static const setting = 'setting';
   static const species = 'species';
 
   static final Map<String, WidgetBuilder> routes = {
     adopt: (context) => const AdoptPage(),
-    coral: (context) => const CoralPage(),
+    boxresult: (context) => const BoxResultPage(),
+    choosebox: (context) => const ChooseBoxPage(),
     coralcards: (context) => const CoralCardsPage(),
     coralcomplete: (context) => const CoralCompletePage(),
     coralidentity: (context) => const CoralIdentityPage(),
+    coral: (context) => const CoralPage(),
+    coralresult: (context) => const CoralResultPage(),
     logintext: (context) => const LoginTextPage(),
     match: (context) => const MatchPage(),
-    matchresult: (context) => const MatchResultPage(),
+    openbox: (context) => const OpenBoxPage(),
     setting: (context) => const SettingPage(),
     species: (contet) => const SpeciesPage(),
   };

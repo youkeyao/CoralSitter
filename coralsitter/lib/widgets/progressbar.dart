@@ -2,25 +2,27 @@ import 'package:flutter/material.dart';
 
 import 'package:coralsitter/common.dart';
 
-Widget progressBar(value, width, height) {
+Widget progressBar(value, width, height, {flag = true}) {
+  Color outColor = flag ? Color(CommonData.themeColor) : Colors.white;
+  Color inColor = flag ? Colors.white : Color(CommonData.themeColor);
   return Container(
     width: width,
-    height: height.toDouble(),
+    height: height,
     decoration: BoxDecoration(
-      border: Border.all(width: 1, color: Colors.white),
+      border: Border.all(width: 1, color: inColor),
       borderRadius: BorderRadius.all(Radius.circular(height/2)),
     ),
     child: Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 2, color: Color(CommonData.themeColor)),
+        border: Border.all(width: 2, color: outColor),
         borderRadius: BorderRadius.all(Radius.circular(height/2)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(height/2)),
         child: LinearProgressIndicator(
-          backgroundColor: Color(CommonData.themeColor),
+          backgroundColor: outColor,
           value: value,
-          valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+          valueColor: AlwaysStoppedAnimation<Color>(inColor),
         ),
       ),
     ),

@@ -176,6 +176,32 @@ def match():
     return species[0]
 
 '''
+box route
+post: {
+}
+response: {
+    'species': species,
+    'speciesen': speciesen,
+    'tags': tags,
+    'classification': classification,
+    'classificationen': classificationen,
+    'difficulty': difficulty,
+    'growspeed': growspeed,
+    'current': current,
+    'light': light,
+    'feed': feed,
+    'color': color,
+    'attention': attention,
+}
+'''
+@app.route('/box',methods=["POST"])
+def box():
+    species = query_db('select * from coralspecies',
+        [],)
+    
+    return species[0]
+
+'''
 listCorals route
 post: {
     'species': species
@@ -250,4 +276,4 @@ def getPos():
 # main
 if __name__ == '__main__':
     app.config.from_object(config)
-    app.run(host="0.0.0.0", port=3000)
+    app.run(host="0.0.0.0", port=config.PORT)

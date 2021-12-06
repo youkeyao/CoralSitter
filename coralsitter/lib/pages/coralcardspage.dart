@@ -58,7 +58,7 @@ class _CoralCardsPageState extends State<CoralCardsPage> {
           toolbarHeight: ScreenUtil().setHeight(7),
           leadingWidth: ScreenUtil().setWidth(15),
           leading: Container(
-            margin: EdgeInsets.only(left: ScreenUtil().setWidth(4.5)),
+            margin: EdgeInsets.only(left: ScreenUtil().setWidth(3)),
             child: IconButton(
               onPressed: () => Navigator.of(context).pop(),
               icon: Icon(Icons.keyboard_arrow_left, color: Colors.black, size: ScreenUtil().setHeight(4),),

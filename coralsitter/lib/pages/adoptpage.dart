@@ -83,11 +83,12 @@ class _AdoptPageState extends State<AdoptPage> {
       'position': "未定",
     };
     Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/adopt', requestData);
+    Map<dynamic, dynamic> posData = await childkey.currentState!.post('/getPos', requestData);
 
-    if (responseData['success'] == null) return;
+    if (responseData['success'] == null || posData['pos'] == null) return;
 
     if (responseData['success']) {
-      List positions = (await childkey.currentState!.post('/getPos', requestData))['pos'];
+      List positions = posData['pos'];
       corals[pos].name = "未命名";
       corals[pos].position = positions[0];
       CommonData.mycorals.add(corals[pos]);
