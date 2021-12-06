@@ -9,7 +9,7 @@ import 'package:coralsitter/common.dart';
 class ServerDialog extends StatefulWidget {
   const ServerDialog({
     Key? key,
-    this.progress = const CircularProgressIndicator(),
+    this.progress = const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white70)),
     this.alpha = 0.6,
     this.textColor = Colors.black,
     required this.child
@@ -59,29 +59,30 @@ class ServerDialogState extends State<ServerDialog> {
         child: Container(
           padding: const EdgeInsets.all(15.0),
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4.0)),
-            child: Container(
-              padding: const EdgeInsets.only(left:20.0),
-              alignment: Alignment.centerLeft,
-              width: MediaQuery.of(context).size.width * 0.75,
-              height: 50.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  widget.progress,
-                Container(
-                  margin: const EdgeInsets.only(left:20.0),
-                  child: Text(
-                    '正在加载...',
-                    style: TextStyle(color: widget.textColor, fontSize: 16.0),
-                  ),
-                ),
-                ],
-              ),
+            color: Colors.white38,
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          child: Container(
+            // padding: const EdgeInsets.only(left:20.0),
+            alignment: Alignment.center,
+            width: 50.0,
+            height: 50.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                widget.progress,
+                // Container(
+                //   margin: const EdgeInsets.only(left:20.0),
+                //   child: Text(
+                //     '正在加载...',
+                //     style: TextStyle(color: widget.textColor, fontSize: 16.0),
+                //   ),
+                // ),
+              ],
             ),
+          ),
         ),
       );
       widgetList.add(Opacity(

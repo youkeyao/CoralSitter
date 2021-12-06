@@ -206,7 +206,7 @@ Widget speciesCard(CoralSpecies species) {
         ).toList(),
       ),
       SizedBox(height: ScreenUtil().setHeight(3),),
-      const Divider(height: 5, color: Colors.white,)
+      const Divider(thickness: 1, color: Colors.white,)
     ],
   );
 }

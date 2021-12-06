@@ -40,6 +40,8 @@ dependencies:
   http: ^0.13.4
   simple_animations: ^4.0.1
   fluttertoast: ^8.0.8
+  barcode_widget: ^2.0.1
+  sprintf: ^6.0.0
 
 dev_dependencies:
   flutter_test:

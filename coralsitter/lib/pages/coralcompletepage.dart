@@ -16,13 +16,18 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
   final FocusNode _focus = FocusNode();
   final TextEditingController _controller = TextEditingController();
   final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
-  int id = 0;
+  late CoralInfo coral;
   String pos = '';
   List positions = [];
 
   void complete() async {
+    if (_controller.text == '' || pos == '') {
+      Fluttertoast.showToast(msg: '输入不能为空');
+      return;
+    }
+
     Map requestData = {
-      'id': id.toString(),
+      'id': coral.id.toString(),
       'username': CommonData.me!.name,
       'coralname': _controller.text,
       'position': pos,
@@ -32,8 +37,11 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
     if (responseData['success'] == null) return;
 
     if (responseData['success']) {
+      coral.name = _controller.text;
+      coral.position = pos;
+      CommonData.mycorals.add(coral);
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed('coralidentity');
+      Navigator.of(context).pushNamed('coralidentity', arguments: coral);
     }
     else {
       Fluttertoast.showToast(msg: '登记失败');
@@ -42,7 +50,7 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
 
   @override
   Widget build(BuildContext context) {
-    id = (ModalRoute.of(context)?.settings.arguments as Map)['id'];
+    coral = (ModalRoute.of(context)?.settings.arguments as Map)['coral'];
     positions = (ModalRoute.of(context)?.settings.arguments as Map)['pos'];
 
     return ScreenUtilInit(

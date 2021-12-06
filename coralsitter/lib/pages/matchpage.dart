@@ -123,8 +123,8 @@ class _MatchPageState extends State<MatchPage> {
         backgroundColor: Color(CommonData.themeColor),
         appBar: AppBar(
           elevation: 0.0,
-          toolbarHeight: 50,
-          title: const Text('匹配珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
+          toolbarHeight: ScreenUtil().setHeight(7),
+          title: Text('匹配珊瑚', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
           centerTitle: true,
           backgroundColor: Color(CommonData.themeColor),
           foregroundColor: Colors.black,

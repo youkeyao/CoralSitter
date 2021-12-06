@@ -90,7 +90,7 @@ class _AdoptPageState extends State<AdoptPage> {
       List positions = (await childkey.currentState!.post('/getPos', requestData))['pos'];
       Navigator.of(context).pop();
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed('coralcomplete', arguments: {'id': corals[pos].id, 'pos': positions});
+      Navigator.of(context).pushNamed('coralcomplete', arguments: {'coral': corals[pos], 'pos': positions});
     }
     else {
       Fluttertoast.showToast(msg: '领养失败');
@@ -131,9 +131,9 @@ class _AdoptPageState extends State<AdoptPage> {
                 child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
               ),
               // top bar
-              const Positioned(
-                top: 34,
-                child: Text('匹配珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
+              Positioned(
+                top: ScreenUtil().setHeight(4.8),
+                child: Text('匹配珊瑚', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
               ),
               Positioned(
                 top: ScreenUtil().setHeight(10),
@@ -154,7 +154,7 @@ class _AdoptPageState extends State<AdoptPage> {
                   children: [
                     infoArea,
                     SizedBox(height: ScreenUtil().setHeight(3),),
-                    const Divider(height: 5, color: Colors.white,),
+                    const Divider(thickness: 1, color: Colors.white,),
                     SizedBox(height: ScreenUtil().setHeight(4),),
                     SizedBox(
                       width: ScreenUtil().setWidth(85),

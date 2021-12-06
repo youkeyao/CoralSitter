@@ -82,8 +82,8 @@ class _MePageState extends State<MePage> {
         appBar: AppBar(
           titleSpacing: ScreenUtil().setWidth(7.5),
           elevation: 0.0,
-          toolbarHeight: 50,
-          title: const Text('个人主页', style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),),
+          toolbarHeight: ScreenUtil().setHeight(7),
+          title: Text('个人主页', style: TextStyle(fontSize: ScreenUtil().setHeight(2.5), color: Colors.black, fontWeight: FontWeight.bold),),
           actions: [
             TextButton(
               onPressed: () {},

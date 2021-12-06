@@ -34,7 +34,7 @@ class _MatchResultPageState extends State<MatchResultPage> {
           CoralInfo(
             id: coral['coralID'],
             name: coral['coralname'],
-            avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralname'] + '.jpg',
+            avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralID'].toString() + '.jpg',
             position: coral['position'],
             updateTime: coral['updatetime'],
             light: coral['light'],
@@ -72,12 +72,12 @@ class _MatchResultPageState extends State<MatchResultPage> {
                 child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
               ),
               // top bar
-              const Positioned(
-                top: 34,
-                child: Text('匹配珊瑚', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),),
+              Positioned(
+                top: ScreenUtil().setHeight(4.8),
+                child: Text('匹配珊瑚', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
               ),
               Positioned(
-                top: 25,
+                top: ScreenUtil().setHeight(3.5),
                 left: ScreenUtil().setWidth(4.5),
                 child: IconButton(
                   onPressed: () => Navigator.of(context).pop(),

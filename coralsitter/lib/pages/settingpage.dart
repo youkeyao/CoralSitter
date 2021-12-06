@@ -21,7 +21,7 @@ class _SettingPageState extends State<SettingPage> {
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
           elevation: 0.0,
-          toolbarHeight: 50,
+          toolbarHeight: ScreenUtil().setHeight(7),
           title: const Text("设置"),
           centerTitle: true,
           backgroundColor: Colors.grey[100],
