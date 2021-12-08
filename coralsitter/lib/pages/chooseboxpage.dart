@@ -62,7 +62,6 @@ class _ChooseBoxPageState extends State<ChooseBoxPage> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context).pop();
                       Navigator.of(context).pushNamed(MyRouter.openbox);
                     },
                     child: Image.asset('assets/images/box_close.png',),

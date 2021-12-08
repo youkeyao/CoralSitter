@@ -13,19 +13,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> daily = ["http://via.placeholder.com/300x150", "http://via.placeholder.com/300x150", "http://via.placeholder.com/300x150"];
-  CoralInfo? coral;
 
-  @override
-  void initState() {
-    super.initState();
-    if (CommonData.mycorals.isNotEmpty) {
-      coral = CommonData.mycorals[0];
+  void homeRoute(Map? value) {
+    if (value != null) {
+      if (value['coralresult'] != null) {
+        Navigator.of(context).pushNamed(MyRouter.coralresult, arguments: value['coralresult']).then((value) => setState(() {homeRoute(value as Map);}));
+      }
+      else if (value['coral'] != null) {
+        Navigator.of(context).pushNamed(MyRouter.coralcomplete, arguments: {'coral': value['coral'], 'pos': value['pos']}).then((value) => setState(() {}));
+      }
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // 领养珊瑚区域
     Widget adoptCoralCard = Card(
       margin: const EdgeInsets.all(0.0),
       elevation: 10.0,
@@ -37,7 +44,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             TextButton(
-              onPressed: () => Navigator.of(context).pushNamed(MyRouter.match),
+              onPressed: () => Navigator.of(context).pushNamed(MyRouter.match).then((value) => homeRoute(value as Map)),
               child: Column(
                 children: [
                   const Text("智能匹配", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
@@ -50,7 +57,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 120, child: VerticalDivider(color: Colors.grey, width: 1,)),
             TextButton(
-              onPressed: () => Navigator.of(context).pushNamed(MyRouter.choosebox),
+              onPressed: () => Navigator.of(context).pushNamed(MyRouter.choosebox).then((value) => homeRoute(value as Map)),
               child: Column(
                 children: [
                   const Text("抽选盲盒", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
@@ -79,17 +86,21 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5), vertical: 10),
           children: [
             const Text("每日精选", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-            // swiper
+            // 每日精选轮播
             Container(
               margin: const EdgeInsets.only(top: 15),
               height: ScreenUtil().setWidth(45),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: swiperCards(daily, context),
+                child: swiperCards([
+                  'http://' + CommonData.server + '/static/daily/1.jpg?' + DateTime.now().millisecondsSinceEpoch.toString(),
+                  'http://' + CommonData.server + '/static/daily/2.jpg?' + DateTime.now().millisecondsSinceEpoch.toString(),
+                  'http://' + CommonData.server + '/static/daily/3.jpg?' + DateTime.now().millisecondsSinceEpoch.toString(),
+                ], context),
               ),
             ),
             const SizedBox(height: 20),
-            // my coral
+            // 我的珊瑚
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -100,9 +111,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            coral == null ? const SizedBox() : coralBox(coral!, context),
+            CommonData.mycorals.isEmpty ? const SizedBox() : coralBox(CommonData.mycorals[0], context),
             const SizedBox(height: 30),
-            // adopt coral
+            // 领养珊瑚
             const Text("领养珊瑚", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
             const SizedBox(height: 15),
             adoptCoralCard,

@@ -169,8 +169,7 @@ class _MatchPageState extends State<MatchPage> {
                     },
                     onComplete: () {
                       if (species != null) {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pushNamed(MyRouter.coralresult, arguments: species);
+                        Navigator.of(context).pop({'coralresult': species});
                       }
                       else {
                         status = "匹配失败";

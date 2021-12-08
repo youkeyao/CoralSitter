@@ -7,6 +7,7 @@ import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/draggablecards.dart';
 import 'package:coralsitter/widgets/serverdialog.dart';
 
+// 珊瑚信息组件
 Widget infoBox(String title, String content, String unit, CustomAnimationControl control, Function render) {
   return Container(
     width: ScreenUtil().setWidth(18),
@@ -48,6 +49,7 @@ Widget infoBox(String title, String content, String unit, CustomAnimationControl
   );
 }
 
+// 领养珊瑚页面
 class AdoptPage extends StatefulWidget {
   const AdoptPage({ Key? key }) : super(key: key);
 
@@ -60,13 +62,14 @@ class _AdoptPageState extends State<AdoptPage> {
 
   CustomAnimationControl control = CustomAnimationControl.stop;
   List corals = [];
-  int pos = 0;
+  int pos = 0; // 当前查看珊瑚位置
 
   void next() async {
     control = CustomAnimationControl.playFromStart;
     setState(() {});
   }
 
+  // 文字透明后更新到下一个
   void render() async {
     if (control == CustomAnimationControl.playFromStart) {
       control = CustomAnimationControl.playReverseFromEnd;
@@ -77,7 +80,7 @@ class _AdoptPageState extends State<AdoptPage> {
 
   void adopt() async {
     Map requestData = {
-      'id': corals[pos].id.toString(),
+      'coralID': corals[pos].coralID.toString(),
       'username': CommonData.me!.name,
       'coralname': "未命名",
       'position': "未定",
@@ -93,8 +96,7 @@ class _AdoptPageState extends State<AdoptPage> {
       corals[pos].position = positions[0];
       CommonData.mycorals.add(corals[pos]);
       Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(MyRouter.coralcomplete, arguments: {'coral': corals[pos], 'pos': positions});
+      Navigator.of(context).pop({'coral': corals[pos], 'pos': positions});
     }
     else {
       Fluttertoast.showToast(msg: '领养失败');
@@ -110,6 +112,7 @@ class _AdoptPageState extends State<AdoptPage> {
   Widget build(BuildContext context) {
     corals = ModalRoute.of(context)?.settings.arguments as List;
     
+    // 珊瑚信息
     Widget infoArea = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -129,16 +132,17 @@ class _AdoptPageState extends State<AdoptPage> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // background
+              // 背景
               Positioned(
                 top: 0,
                 child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
               ),
-              // top bar
+              // 顶部栏
               Positioned(
                 top: ScreenUtil().setHeight(4.8),
                 child: Text('匹配珊瑚', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
               ),
+              // 珊瑚卡片
               Positioned(
                 top: ScreenUtil().setHeight(10),
                 child: DraggableCards(
@@ -150,6 +154,7 @@ class _AdoptPageState extends State<AdoptPage> {
                   next: next,
                 ),
               ),
+              // 珊瑚信息和领养按钮
               Positioned(
                 bottom: 0,
                 left: ScreenUtil().setWidth(7.5),

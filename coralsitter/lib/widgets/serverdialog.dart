@@ -26,11 +26,11 @@ class ServerDialog extends StatefulWidget {
 class ServerDialogState extends State<ServerDialog> {
   bool loading = false;
 
-  Future<Map> post(String route, Map data) async {
+  Future<Map> post(String route, Map data, {int waitTime=500}) async {
     Map<dynamic, dynamic> responseData = {};
     loading = true;
     setState(() {});
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(Duration(milliseconds: waitTime));
     try {
       Uri uri = Uri.parse('http://' + CommonData.server + route);
       http.Response response = await http.post(

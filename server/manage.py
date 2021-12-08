@@ -3,6 +3,7 @@ from contextlib import closing
 import config
 import sqlite3
 import shutil
+import base64
 
 app = Flask(__name__)
 
@@ -49,12 +50,13 @@ post: {
     'password': password
 }
 response: {
+    'userID': userID,
     'username': username,
     'sign': sign,
     'tags': tags,
     'mycorals': [
         {
-            'id': id,
+            'coralID': coralID,
             'coralname': coralname,
             'position': position,
             'updatetime': updatetime,
@@ -116,6 +118,7 @@ post: {
     'password': password
 }
 response: {
+    'userID': userID,
     'username': username,
     'sign': sign,
     'tags': tags,
@@ -127,15 +130,25 @@ response: {
 def signup():
     username = request.form['username']
     password = request.form['password']
+    user = query_db('select * from users where username = ?',
+        [username], one=True)
 
     response = {}
+
+    if user:
+        response['success'] = False
+        return response
+
     try:
-        g.db.execute('insert into users values(?, ?, ?, ?)',
-            [username, password, "无签名", "无标签"])
+        g.db.execute('insert into users values(?, ?, ?, ?, ?)',
+            [None, username, password, "无签名", "无标签"])
         g.db.commit()
-        shutil.copy("./static/user_avatar/default.jpg", "./static/user_avatar/" + username + ".jpg")
-        response['success'] = True
+        user = query_db('select * from users where username = ?',
+            [username], one=True)
+        print(user)
+        shutil.copy("./static/user_avatar/default.jpg", "./static/user_avatar/" + str(user['userID']) + ".jpg")
         response = {
+            'userID': user['userID'],
             'username': username,
             'sign': "无签名",
             'tags': "无标签",
@@ -144,6 +157,40 @@ def signup():
         }
     except:
         response['success'] = False
+    return response
+
+'''
+changeUserInfo route
+post: {
+    'userID': userID,
+    'username': username,
+    'sign': sign,
+    'tags': tags,
+    'avatar': avatar,
+}
+response: {
+    'success': True/False
+}
+'''
+@app.route('/changeUserInfo',methods=["POST"])
+def changeUserInfo():
+    userID = request.form['userID']
+    username = request.form['username']
+    sign = request.form['sign']
+    tags = request.form['tags']
+    avatar = request.form['avatar']
+
+    response = {}
+
+    try:
+        if avatar != '':
+            file = open("./static/user_avatar/" + str(userID) + ".jpg", 'wb')
+            file.write(base64.b64decode(avatar))
+            file.close()
+        response['success'] = True
+    except:
+        response['success'] = False
+    
     return response
 
 '''
@@ -209,8 +256,8 @@ post: {
 response: {
     'result': [
         {
-            'coralname': coralname,
             'coralID': coralID,
+            'coralname': coralname,
             'position': position,
             'updatetime': updatetime,
             'light': light,
@@ -240,7 +287,7 @@ def listCorals():
 '''
 adopt route
 post: {
-    'id': id
+    'coralID': coralID
     'username': username,
     'coralname': coralname,
     'position': position,
@@ -270,6 +317,42 @@ def getPos():
         'pos': [
             "凤凰岛西侧海域",
             "渤海东侧海域"
+        ]
+    }
+
+'''
+getStory route
+post: {
+    'coralIDs': [...]
+}
+response: {
+    'story': [
+        {
+            'coralID': coralID,
+            'time': time,
+            'text': text,
+            'image': image,
+        }
+    ]
+}
+'''
+@app.route('/getStory',methods=["POST"])
+def getStory():
+    coralIDs = request.form['coralIDs'].split('-')
+    return {
+        'story': [
+            {
+                'coralID': 1,
+                'time': '2021年1月2日',
+                'text': '小丑鱼拜访了我',
+                'image': '1/2021_1_2.jpg',
+            },
+            {
+                'coralID': 1,
+                'time': '2021年1月2日',
+                'text': '小丑鱼拜访了我',
+                'image': '1/2021_1_2.jpg',
+            },
         ]
     }
 

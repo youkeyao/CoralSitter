@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 盲盒结果页面
 class BoxResultPage extends StatefulWidget {
   const BoxResultPage({ Key? key }) : super(key: key);
 
@@ -16,6 +17,7 @@ class _BoxResultPageState extends State<BoxResultPage> {
   @override
   Widget build(BuildContext context) {
     species = ModalRoute.of(context)?.settings.arguments as CoralSpecies;
+
     return ScreenUtilInit(
       designSize: const Size(100, 100),
       builder: () => Scaffold(
@@ -40,7 +42,7 @@ class _BoxResultPageState extends State<BoxResultPage> {
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(CommonData.themeColor)),),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(MyRouter.coralresult, arguments: species);
+                  Navigator.of(context).pop({'coralresult': species});
                 },
                 child: const Text("查看珊瑚卡片", style: TextStyle(fontSize: 14, color: Colors.white),)
               ),

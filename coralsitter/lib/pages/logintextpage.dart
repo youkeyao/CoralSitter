@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:coralsitter/widgets/serverdialog.dart';
 import 'package:coralsitter/common.dart';
+import 'package:coralsitter/widgets/serverdialog.dart';
 
 class LoginTextPage extends StatefulWidget {
   const LoginTextPage({ Key? key }) : super(key: key);
@@ -60,7 +60,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
     super.dispose();
   }
 
-  // focus listen
+  // 焦点监听
   Future<void> _focusNodeListener() async{
     if(_focusNodeUserName.hasFocus){
       _focusNodePassWord.unfocus();
@@ -95,15 +95,16 @@ class _LoginTextPageState extends State<LoginTextPage> {
 
       if (responseData['success']) {
         CommonData.me = UserInfo(
+          userID: responseData['userID'],
           name: responseData['username'],
-          avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['username'] + '.jpg',
+          avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['userID'].toString() + '.jpg',
           sign: responseData['sign'],
           tags: responseData['tags'].split('-'),
         );
         responseData['mycorals'].forEach((coral) => {
           CommonData.mycorals.add(
             CoralInfo(
-              id: coral['coralID'],
+              coralID: coral['coralID'],
               name: coral['coralname'],
               avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralID'].toString() + '.jpg',
               position: coral['position'],
@@ -165,13 +166,15 @@ class _LoginTextPageState extends State<LoginTextPage> {
 
       if (responseData['success']) {
         CommonData.me = UserInfo(
+          userID: responseData['userID'],
           name: responseData['username'],
-          avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['username'] + '.jpg',
+          avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['userID'].toString() + '.jpg',
           sign: responseData['sign'],
           tags: responseData['tags'].split('-'),
         );
         Navigator.of(context).pop();
         callback();
+        Navigator.of(context).pushNamed(MyRouter.changeuserinfo);
       }
       else {
         Fluttertoast.showToast(msg: '注册失败');
@@ -199,7 +202,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
-        // clear button
+        // 清除按钮
         suffixIcon: (_isShowClear) ? IconButton(
           icon: const Icon(Icons.clear, color: Colors.white,),
           onPressed: (){
@@ -227,7 +230,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
-        // show password
+        // 显示隐藏密码按钮
         suffixIcon: IconButton(
           icon: Icon((_isShowPwd) ? Icons.visibility : Icons.visibility_off, color: Colors.white,),
           onPressed: (){
@@ -276,23 +279,23 @@ class _LoginTextPageState extends State<LoginTextPage> {
 
     return ScreenUtilInit(
       designSize: const Size(100, 100),
-      builder: () => Scaffold(
-        backgroundColor: background,
-        // cancel keyboard
-        body: GestureDetector(
-          onTap: (){
-            _focusNodePassWord.unfocus();
-            _focusNodeUserName.unfocus();
-            _focusNodeConfirmPassWord.unfocus();
-          },
-          child: ServerDialog(
-            key: childkey,
-            child: ListView(
+      // 取消键盘
+      builder: () => GestureDetector(
+        onTap: () {
+          _focusNodePassWord.unfocus();
+          _focusNodeUserName.unfocus();
+          _focusNodeConfirmPassWord.unfocus();
+        },
+        child: ServerDialog(
+          key: childkey,
+          child: Scaffold(
+            backgroundColor: background,
+            body: ListView(
               children: [
                 SizedBox(height: ScreenUtil().setHeight(8),),
                 Image(image: const AssetImage('assets/icons/icon.png'), height: ScreenUtil().setHeight(20),),
                 SizedBox(height: ScreenUtil().setHeight(8),),
-                // input
+                // 输入区域
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
                   decoration: BoxDecoration(
@@ -312,7 +315,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
                   ),
                 ),
                 SizedBox(height: ScreenUtil().setHeight(5),),
-                // login button
+                // 登陆或注册按钮
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
                   child: TextButton(

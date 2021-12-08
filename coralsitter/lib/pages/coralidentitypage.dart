@@ -168,7 +168,7 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
                           padding: EdgeInsets.only(left: ScreenUtil().setWidth(12), right: ScreenUtil().setWidth(12), top: ScreenUtil().setHeight(4), bottom: ScreenUtil().setHeight(2)),
                           height: ScreenUtil().setHeight(16),
                           barcode: Barcode.code128(),
-                          data: sprintf("%015d", [coral.id]),
+                          data: sprintf("%015d", [coral.coralID]),
                           drawText: true,
                           color: const Color(0xFF1A237E),
                           textPadding: ScreenUtil().setHeight(1.5),

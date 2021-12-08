@@ -27,7 +27,7 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
     }
 
     Map requestData = {
-      'id': coral.id.toString(),
+      'coralID': coral.coralID.toString(),
       'username': CommonData.me!.name,
       'coralname': _controller.text,
       'position': pos,
@@ -51,6 +51,40 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
   Widget build(BuildContext context) {
     coral = (ModalRoute.of(context)?.settings.arguments as Map)['coral'];
     positions = (ModalRoute.of(context)?.settings.arguments as Map)['pos'];
+
+    // 选择种植地区
+    Widget choosePos = SizedBox(
+      width: ScreenUtil().setWidth(85),
+      height: ScreenUtil().setHeight(45.5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("帮它选择自己未来的居住位置", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),),
+          const SizedBox(height: 5,),
+          ExpansionTile(
+            title: Text(pos),
+            onExpansionChanged: (isChanged) {
+              _focus.unfocus();
+            },
+            children: [
+              SizedBox(
+                height: ScreenUtil().setHeight(30),
+                child: ListView(
+                  padding: const EdgeInsets.all(0.0),
+                  children: positions.map((value) => ListTile(
+                    title: Text(value),
+                    onTap: () {
+                      pos = value;
+                      setState(() {});
+                    },
+                  )).toList(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
 
     return ScreenUtilInit(
       designSize: const Size(100, 100),
@@ -96,38 +130,7 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  width: ScreenUtil().setWidth(85),
-                  height: ScreenUtil().setHeight(45.5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("帮它选择自己未来的居住位置", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),),
-                      const SizedBox(height: 5,),
-                      ExpansionTile(
-                        title: Text(pos),
-                        onExpansionChanged: (isChanged) {
-                          _focus.unfocus();
-                        },
-                        children: [
-                          SizedBox(
-                            height: ScreenUtil().setHeight(30),
-                            child: ListView(
-                              padding: const EdgeInsets.all(0.0),
-                              children: positions.map((value) => ListTile(
-                                title: Text(value),
-                                onTap: () {
-                                  pos = value;
-                                  setState(() {});
-                                },
-                              )).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                choosePos,
                 SizedBox(
                   width: ScreenUtil().setWidth(85),
                   height: ScreenUtil().setHeight(5),

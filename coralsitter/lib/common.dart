@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:coralsitter/pages/adoptpage.dart';
 import 'package:coralsitter/pages/boxresultpage.dart';
+import 'package:coralsitter/pages/changeuserinfopage.dart';
 import 'package:coralsitter/pages/chooseboxpage.dart';
 import 'package:coralsitter/pages/coralcardspage.dart';
 import 'package:coralsitter/pages/coralcompletepage.dart';
@@ -17,6 +18,7 @@ import 'package:coralsitter/pages/speciespage.dart';
 class MyRouter {
   static const adopt = 'adopt';
   static const boxresult = 'boxresult';
+  static const changeuserinfo = 'changeuserinfo';
   static const choosebox = 'choosebox';
   static const coralcards = 'coralcards';
   static const coralcomplete = 'coralcomplete';
@@ -32,6 +34,7 @@ class MyRouter {
   static final Map<String, WidgetBuilder> routes = {
     adopt: (context) => const AdoptPage(),
     boxresult: (context) => const BoxResultPage(),
+    changeuserinfo: (context) => const ChangeUserInfoPage(),
     choosebox: (context) => const ChooseBoxPage(),
     coralcards: (context) => const CoralCardsPage(),
     coralcomplete: (context) => const CoralCompletePage(),
@@ -47,11 +50,12 @@ class MyRouter {
 }
 
 class UserInfo {
+  int userID;
   String name; // 用户名称
   String avatar; // 用户头像
   String sign; // 用户签名
   List<String> tags; // 用户标签
-  UserInfo({required this.name, required this.avatar, required this.sign, required this.tags});
+  UserInfo({required this.userID, required this.name, required this.avatar, required this.sign, required this.tags});
 }
 
 class CoralSpecies {
@@ -71,7 +75,7 @@ class CoralSpecies {
 }
 
 class CoralInfo {
-  int id;
+  int coralID;
   String name; // 珊瑚名称
   String avatar; // 珊瑚头像
   String position; // 珊瑚地址
@@ -86,7 +90,7 @@ class CoralInfo {
   String birthtime;
   String adopttime;
   CoralSpecies species;
-  CoralInfo({required this.id, required this.name, required this.avatar, required this.position, required this.updateTime, required this.light, required this.temp, required this.microelement, required this.size, required this.lastmeasure, required this.growth, required this.score, required this.birthtime, required this.adopttime, required this.species});
+  CoralInfo({required this.coralID, required this.name, required this.avatar, required this.position, required this.updateTime, required this.light, required this.temp, required this.microelement, required this.size, required this.lastmeasure, required this.growth, required this.score, required this.birthtime, required this.adopttime, required this.species});
 }
 
 class CommonData {

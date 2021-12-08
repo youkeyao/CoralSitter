@@ -1,14 +1,14 @@
 CREATE TABLE users(
+    userID INTEGER PRIMARY KEY AUTOINCREMENT,
     username CHAR[50] NOT NULL,
     password CHAR[50] NOT NULL,
-    sign CHAR[50],
-    tags CHAR[50] NOT NULL,
-    PRIMARY KEY(username)
+    sign CHAR[50] NOT NULL,
+    tags CHAR[50] NOT NULL
 );
 
 CREATE TABLE corals(
     master CHAR[50],
-    coralID INT NOT NULL,
+    coralID INT PRIMARY KEY AUTOINCREMENT,
     coralname CHAR[50],
     species CHAR[20] NOT NULL,
     position CHAR[50],
@@ -22,11 +22,10 @@ CREATE TABLE corals(
     score INT NOT NULL,
     birthtime CHAR[10] NOT NULL,
     adopttime CHAR[10],
-    PRIMARY KEY(coralID)
 );
 
 CREATE TABLE coralspecies(
-    species CHAR[50] NOT NULL,
+    species CHAR[50] PRIMARY KEY,
     speciesen CHAR[50] NOT NULL,
     tags CHAR[50] NOT NULL,
     classification CHAR[50] NOT NULL,
@@ -38,5 +37,4 @@ CREATE TABLE coralspecies(
     feed CHAR[5] NOT NULL,
     color CHAR[15] NOT NULL,
     attention CHAR[50] NOT NULL,
-    PRIMARY KEY(species)
 );

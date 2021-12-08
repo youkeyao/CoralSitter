@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/swipercards.dart';
+import 'package:coralsitter/widgets/serverdialog.dart';
+import 'package:coralsitter/widgets/coralstory.dart';
 
 Widget monitorBox(Color color, IconData icon, String indicator, String value) {
   return Stack(
@@ -69,10 +71,33 @@ class CoralPage extends StatefulWidget {
 }
 
 class _CoralPageState extends State<CoralPage> {
-  List<String> coralImages = ["http://via.placeholder.com/500x250", "http://via.placeholder.com/500x250", "http://via.placeholder.com/500x250"];
+  final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
+
+  List storys = [];
+
+  late CoralInfo coral;
+
+  void getStory() async {
+    Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/getStory', {
+      'coralIDs': coral.coralID.toString(),
+    });
+
+    if (responseData['story'] == null) return;
+
+    storys = responseData['story'];
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => getStory()); 
+  }
+
   @override
   Widget build(BuildContext context) {
-    CoralInfo coral = ModalRoute.of(context)?.settings.arguments as CoralInfo;
+    coral = ModalRoute.of(context)?.settings.arguments as CoralInfo;
 
     Widget topArea = Stack(
       alignment: Alignment.center,
@@ -87,7 +112,11 @@ class _CoralPageState extends State<CoralPage> {
           child: SizedBox(
             width: ScreenUtil().setWidth(100),
             height: ScreenUtil().setWidth(45),
-            child: swiperCards(coralImages, context),
+            child: swiperCards([
+              'http://' + CommonData.server + '/static/coral_bg/' + coral.coralID.toString() + '/1.jpg',
+              'http://' + CommonData.server + '/static/coral_bg/' + coral.coralID.toString() + '/2.jpg',
+              'http://' + CommonData.server + '/static/coral_bg/' + coral.coralID.toString() + '/3.jpg'
+            ], context),
           )
         ),
         // top bar
@@ -133,7 +162,7 @@ class _CoralPageState extends State<CoralPage> {
           top: ScreenUtil().setWidth(38),
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(width: ScreenUtil().setWidth(2.5), color: Colors.white),
+              border: Border.all(width: ScreenUtil().setWidth(2.5), color: Colors.grey[100]!),
               borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15.5)),
             ),
             child: Container(
@@ -144,7 +173,7 @@ class _CoralPageState extends State<CoralPage> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  border: Border.all(width: ScreenUtil().setWidth(2), color: Colors.white),
+                  border: Border.all(width: ScreenUtil().setWidth(2), color: Colors.grey[100]!),
                   borderRadius: BorderRadius.circular(ScreenUtil().setWidth(12)),
                 ),
                 child: ClipOval(
@@ -179,51 +208,65 @@ class _CoralPageState extends State<CoralPage> {
 
     return ScreenUtilInit(
       designSize: const Size(100, 100),
-      builder: () => Scaffold(
-        backgroundColor: Colors.white,
-        body: ListView(
-          padding: const EdgeInsets.all(0.0),
-          children: [
-            topArea,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // const Text("种植位置", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-                  // const SizedBox(height: 15,),
-                  // Image.network(coral.positionImage),
-                  // const SizedBox(height: 30,),
-                  const Text("每日检测", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-                  Text("更新于"+coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
-                  const SizedBox(height: 15,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      monitorBox(const Color(0xFFBBDEFB), Icons.wb_sunny_outlined, "光照强度", coral.light),
-                      monitorBox(const Color(0xFFF1F8E9), Icons.waves, "海水气温", coral.temp),
-                      monitorBox(const Color(0xFFFFE0B2), Icons.bubble_chart, "微量元素", coral.microelement),
-                    ],
-                  ),
-                  const SizedBox(height: 30,),
-                  const Text("成长指数", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-                  Text("更新于"+coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
-                  const SizedBox(height: 15,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      growBox("大小（直径）", coral.size.toString()),
-                      const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
-                      growBox("距离上次测量", (coral.lastmeasure > 0 ? '+' : '') + coral.lastmeasure.toString()),
-                      const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
-                      growBox("平均每月增长", coral.growth.toString()),
-                    ],
-                  ),
-                  const SizedBox(height: 30,),
-                ],
+      builder: () => ServerDialog(
+        key: childkey,
+        child: Scaffold(
+          backgroundColor: Colors.grey[100],
+          body: ListView(
+            padding: const EdgeInsets.all(0.0),
+            children: [
+              topArea,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // const Text("种植位置", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                    // const SizedBox(height: 15,),
+                    // Image.network(coral.positionImage),
+                    // const SizedBox(height: 30,),
+                    const Text("每日检测", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Text("更新于"+coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
+                    const SizedBox(height: 15,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        monitorBox(const Color(0xFFBBDEFB), Icons.wb_sunny_outlined, "光照强度", coral.light),
+                        monitorBox(const Color(0xFFF1F8E9), Icons.waves, "海水气温", coral.temp),
+                        monitorBox(const Color(0xFFFFE0B2), Icons.bubble_chart, "微量元素", coral.microelement),
+                      ],
+                    ),
+                    const SizedBox(height: 30,),
+                    const Text("成长指数", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                    Text("更新于"+coral.updateTime, style: const TextStyle(fontSize: 10, color: Colors.grey,),),
+                    const SizedBox(height: 15,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        growBox("大小（直径）", coral.size.toString()),
+                        const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
+                        growBox("距离上次测量", (coral.lastmeasure > 0 ? '+' : '') + coral.lastmeasure.toString()),
+                        const SizedBox(height: 40, child: VerticalDivider(color: Colors.grey, width: 1,)),
+                        growBox("平均每月增长", coral.growth.toString()),
+                      ],
+                    ),
+                    const SizedBox(height: 30,),
+                    const Text("它的故事", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+                    const SizedBox(height: 10,),
+                    Column(
+                      children: storys.map((story) => coralStory(
+                        ScreenUtil().setWidth(85),
+                        story['time'],
+                        story['text'],
+                        'http://' + CommonData.server + '/static/storys/' + story['image'] + '?' + DateTime.now().millisecondsSinceEpoch.toString())
+                      ).toList(),
+                    ),
+                    const SizedBox(height: 10,),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

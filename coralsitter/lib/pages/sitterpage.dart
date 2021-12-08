@@ -4,6 +4,9 @@ import 'package:reorderables/reorderables.dart';
 
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/coralbox.dart';
+import 'package:coralsitter/widgets/serverdialog.dart';
+import 'package:coralsitter/widgets/coralstory.dart';
+import 'package:coralsitter/widgets/tagsbox.dart';
 
 class SitterPage extends StatefulWidget {
   const SitterPage({ Key? key }) : super(key: key);
@@ -13,15 +16,33 @@ class SitterPage extends StatefulWidget {
 }
 
 class _SitterPageState extends State<SitterPage> {
+  final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
+
+  List storys = [];
+
+  void getStory() async {
+    Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/getStory', {
+      'coralIDs': CommonData.mycorals.map((coral) => coral.coralID).toList().join('-')
+    }, waitTime: 0);
+
+    if (responseData['story'] == null) return;
+
+    storys = responseData['story'];
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => getStory()); 
   }
 
   List<Widget> buildMyCorals(BuildContext context) {
     List<Widget> widgets = [const SizedBox(height: 10, key: ValueKey(0),)];
     for (int i = 0; i < CommonData.mycorals.length; i ++) {
       widgets.add(coralBox(CommonData.mycorals[i], context, key: 2*i+1,),);
+      // 增加间隔
       widgets.add(SizedBox(height: 20, key: ValueKey(2*i)));
     }
     return widgets;
@@ -29,6 +50,7 @@ class _SitterPageState extends State<SitterPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 顶部区域
     Widget topArea = Stack(
       alignment: Alignment.center,
       children: [
@@ -36,12 +58,17 @@ class _SitterPageState extends State<SitterPage> {
           width: ScreenUtil().setWidth(100),
           height: ScreenUtil().setWidth(80),
         ),
-        // background image
+        // 背景图片
         Positioned(
           top: 0,
-          child: Image.network("http://via.placeholder.com/500x250", width: ScreenUtil().setWidth(100), height: ScreenUtil().screenWidth * 0.5,),
+          child: Image.network(
+            'http://' + CommonData.server + '/static/storys/' + (storys.isEmpty||storys[0]['image']==''?'default.jpg':storys[0]['image']),
+            width: ScreenUtil().setWidth(100),
+            height: ScreenUtil().setWidth(50),
+            fit: BoxFit.cover,
+          ),
         ),
-        // name and tags
+        // 用户名和标签
         Positioned(
           top: ScreenUtil().setWidth(40),
           child: Container(
@@ -56,24 +83,13 @@ class _SitterPageState extends State<SitterPage> {
             child: CommonData.me == null ? const SizedBox() : Column(
               children: [
                 Text(CommonData.me!.name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: CommonData.me!.tags.map((tag) => Container(
-                    height: 24,
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
-                    margin: const EdgeInsets.only(top: 10.0),
-                    decoration: BoxDecoration(
-                      color: Color(CommonData.themeColor),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Text(tag, style: const TextStyle(fontSize: 12, color: Colors.white),),
-                  )).toList(),
-                ),
+                const SizedBox(height: 10),
+                tagsBox(ScreenUtil().setWidth(50), ScreenUtil().setWidth(50), CommonData.me!.tags),
               ],
             ),
           ),
         ),
-        // Avatar
+        // 头像
         CommonData.me == null ? const SizedBox() : Positioned(
           top: ScreenUtil().setWidth(30),
           child: Container(
@@ -81,7 +97,10 @@ class _SitterPageState extends State<SitterPage> {
             height: ScreenUtil().setWidth(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadiusDirectional.circular(ScreenUtil().setWidth(2)),
-              image: DecorationImage(image: NetworkImage(CommonData.me!.avatar,),),
+              image: DecorationImage(
+                image: NetworkImage(CommonData.me!.avatar + '?' + DateTime.now().millisecondsSinceEpoch.toString(),),
+                fit: BoxFit.cover
+              ),
               border: Border.all(color: Colors.white, width: 2),
             ),
           ),
@@ -91,32 +110,50 @@ class _SitterPageState extends State<SitterPage> {
 
     return ScreenUtilInit(
       designSize: const Size(100, 100),
-      builder: () => Scaffold(
-        backgroundColor: Colors.grey[100],
-        body: ListView(
-          padding: const EdgeInsets.all(0.0),
-          children: [
-            topArea,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
-              child: const Text("我的珊瑚", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
-              child: ReorderableColumn(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                onReorder: (oldIndex, newIndex) {
-                  oldIndex = (oldIndex-1) ~/ 2;
-                  newIndex = (newIndex-1) ~/ 2;
-                  CoralInfo tmp = CommonData.mycorals.removeAt(oldIndex);
-                  CommonData.mycorals.insert(newIndex, tmp);
-                  setState(() {
-                  });
-                },
-                children: buildMyCorals(context),
+      builder: () => ServerDialog(
+        key: childkey,
+        child: Scaffold(
+          backgroundColor: Colors.grey[100],
+          body: ListView(
+            padding: const EdgeInsets.all(0.0),
+            children: [
+              topArea,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
+                child: const Text("我的珊瑚", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
+                child: ReorderableColumn(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  onReorder: (oldIndex, newIndex) {
+                    oldIndex = (oldIndex-1) ~/ 2;
+                    newIndex = (newIndex-1) ~/ 2;
+                    CoralInfo tmp = CommonData.mycorals.removeAt(oldIndex);
+                    CommonData.mycorals.insert(newIndex, tmp);
+                    setState(() {
+                    });
+                  },
+                  children: buildMyCorals(context),
+                ),
+              ),
+              const SizedBox(height: 15,),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
+                child: const Text("故事精选", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
+              ),
+              const SizedBox(height: 10,),
+              Column(
+                children: storys.map((story) => coralStory(
+                  ScreenUtil().setWidth(85),
+                  story['time'],
+                  story['text'],
+                  story['image']!=''?'http://' + CommonData.server + '/static/storys/' + story['image']:'')
+                ).toList(),
+              ),
+              const SizedBox(height: 10,),
+            ],
+          ),
         ),
       ),
     );

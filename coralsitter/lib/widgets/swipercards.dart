@@ -5,7 +5,7 @@ Widget swiperCards(List<String> urls, BuildContext context) {
   return Swiper(
     itemBuilder: (context, index) => Image.network(
       urls[index],
-      fit: BoxFit.fill,
+      fit: BoxFit.cover,
     ),
     itemCount: urls.length,
     pagination: const SwiperPagination(

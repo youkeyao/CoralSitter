@@ -32,7 +32,7 @@ class _CoralResultPageState extends State<CoralResultPage> {
       responseData['result'].forEach((coral) => {
         corals.add(
           CoralInfo(
-            id: coral['coralID'],
+            coralID: coral['coralID'],
             name: coral['coralname'],
             avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralID'].toString() + '.jpg',
             position: coral['position'],

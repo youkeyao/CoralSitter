@@ -44,7 +44,8 @@ class _SettingPageState extends State<SettingPage> {
                 Navigator.of(context).pop();
                 callback();
               },
-              child: const Text("退出登陆", style: TextStyle(fontSize: 20),),)
+              child: const Text("退出登陆", style: TextStyle(color: Colors.black, fontSize: 16),),
+            ),
           ],
         ),
       ),
