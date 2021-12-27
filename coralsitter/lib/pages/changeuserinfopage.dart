@@ -75,27 +75,33 @@ class _ChangeUserInfoPageState extends State<ChangeUserInfoPage> {
     },
     '穿搭': {
       '汉服': CommonData.me!.tags.contains('汉服'),
-      'hipop': CommonData.me!.tags.contains('hipop'),
       '国潮': CommonData.me!.tags.contains('国潮'),
       '撞色': CommonData.me!.tags.contains('撞色'),
-      'Lolita': CommonData.me!.tags.contains('Lolita'),
       '复古': CommonData.me!.tags.contains('复古'),
-      'oversize': CommonData.me!.tags.contains('oversize'),
       '运动': CommonData.me!.tags.contains('运动'),
       '西装': CommonData.me!.tags.contains('西装'),
     },
     '性格': {
-      '可爱': CommonData.me!.tags.contains('可爱'),
-      '心思细腻': CommonData.me!.tags.contains('心思细腻'),
-      '幽默': CommonData.me!.tags.contains('幽默'),
-      '好强': CommonData.me!.tags.contains('好强'),
+      '大大咧咧': CommonData.me!.tags.contains('大大咧咧'),
+      '乐观': CommonData.me!.tags.contains('乐观'),
+      '玻璃心': CommonData.me!.tags.contains('玻璃心'),
+    },
+    '待人': {
       '内向': CommonData.me!.tags.contains('内向'),
-      '安静': CommonData.me!.tags.contains('安静'),
-      '温柔': CommonData.me!.tags.contains('温柔'),
-      '慢热': CommonData.me!.tags.contains('慢热'),
-      '有趣': CommonData.me!.tags.contains('有趣'),
-      '外向开朗': CommonData.me!.tags.contains('外向开朗'),
+      '害羞': CommonData.me!.tags.contains('害羞'),
+      '开朗': CommonData.me!.tags.contains('开朗'),
       '热情': CommonData.me!.tags.contains('热情'),
+    },
+    '处事': {
+      '沉稳': CommonData.me!.tags.contains('沉稳'),
+      '冷静': CommonData.me!.tags.contains('冷静'),
+      '好奇': CommonData.me!.tags.contains('好奇'),
+      '勇敢': CommonData.me!.tags.contains('勇敢'),
+    },
+    '角色': {
+      '聆听者': CommonData.me!.tags.contains('聆听者'),
+      '组织者': CommonData.me!.tags.contains('组织者'),
+      '管理者': CommonData.me!.tags.contains('管理者'),
     },
   };
 
@@ -110,10 +116,9 @@ class _ChangeUserInfoPageState extends State<ChangeUserInfoPage> {
   }
 
   void saveChange() async {
-    if (choosenTags.isEmpty) choosenTags.add('无标签');
     Map requestData = {
       'userID': CommonData.me!.userID.toString(),
-      'username': _userNameController.text,
+      'userName': _userNameController.text,
       'sign': _signController.text,
       'tags': choosenTags.join('-'),
     };
@@ -138,6 +143,28 @@ class _ChangeUserInfoPageState extends State<ChangeUserInfoPage> {
     }
   }
 
+  // 选择标签，大类只能选一个
+  void chooseTag(String title, String tag) {
+    allTags[title]!.forEach((key, value) {
+      if (key != tag) {
+        if (value) {
+          allTags[title]![key] = false;
+          choosenTags.remove(key);
+        }
+      }
+      else {
+        if (value) {
+          allTags[title]![key] = false;
+          choosenTags.remove(key);
+        }
+        else {
+          allTags[title]![key] = true;
+          choosenTags.add(key);
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -145,7 +172,6 @@ class _ChangeUserInfoPageState extends State<ChangeUserInfoPage> {
     _focusNodeSign.addListener(_focusNodeListener);
     _userNameController.text = CommonData.me!.name;
     _signController.text = CommonData.me!.sign;
-    choosenTags.remove('无标签');
   }
 
   @override
@@ -281,13 +307,14 @@ class _ChangeUserInfoPageState extends State<ChangeUserInfoPage> {
               children: allTags[title]!.keys.map((k) => tagItem(
                 k,
                 () {
-                  allTags[title]![k] = !allTags[title]![k]!;
-                  if (choosenTags.contains(k)) {
-                    choosenTags.remove(k);
-                  }
-                  else {
-                    choosenTags.add(k);
-                  }
+                  // allTags[title]![k] = !allTags[title]![k]!;
+                  // if (choosenTags.contains(k)) {
+                  //   choosenTags.remove(k);
+                  // }
+                  // else {
+                  //   choosenTags.add(k);
+                  // }
+                  chooseTag(title, k);
                   setState(() {});
                 },
                 allTags[title]![k]!,

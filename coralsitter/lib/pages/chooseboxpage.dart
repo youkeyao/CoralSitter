@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 抽取盲盒页面
 class ChooseBoxPage extends StatefulWidget {
   const ChooseBoxPage({ Key? key }) : super(key: key);
 

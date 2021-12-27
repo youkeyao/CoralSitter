@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/speciescard.dart';
 
+// 珊瑚类型页面
 class SpeciesPage extends StatefulWidget {
   const SpeciesPage({ Key? key }) : super(key: key);
 
@@ -25,12 +26,12 @@ class _SpeciesPageState extends State<SpeciesPage> {
         body: Stack(
           alignment: Alignment.center,
           children: [
-            // background
+            // 背景
             Positioned(
               top: 0,
               child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
             ),
-            // top bar
+            // 标题栏
             Positioned(
               top: ScreenUtil().setHeight(4.8),
               child: Text('珊瑚类型', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),

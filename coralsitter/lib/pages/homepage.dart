@@ -5,6 +5,7 @@ import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/coralbox.dart';
 import 'package:coralsitter/widgets/swipercards.dart';
 
+// 主页
 class HomePage extends StatefulWidget {
   const HomePage({ Key? key }) : super(key: key);
 

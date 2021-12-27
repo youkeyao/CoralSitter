@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 珊瑚详情按钮
 Widget coralBox(CoralInfo coral, BuildContext context, {int key=0}) {
   return Card(
     key: ValueKey(key),
@@ -14,7 +15,7 @@ Widget coralBox(CoralInfo coral, BuildContext context, {int key=0}) {
       onPressed: () => Navigator.of(context).pushNamed(MyRouter.coral, arguments: coral),
       child: ListTile(
         leading: ClipOval(
-          child: Image.network(coral.avatar, width: ScreenUtil().setWidth(10), height: ScreenUtil().setWidth(10),),
+          child: Image.network(coral.avatar, width: ScreenUtil().setWidth(10), height: ScreenUtil().setWidth(10), fit: BoxFit.cover,),
         ),
         title: Row(
           children: [

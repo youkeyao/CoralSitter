@@ -8,6 +8,7 @@ import 'package:coralsitter/widgets/serverdialog.dart';
 import 'package:coralsitter/widgets/coralstory.dart';
 import 'package:coralsitter/widgets/tagsbox.dart';
 
+// 珊护页面
 class SitterPage extends StatefulWidget {
   const SitterPage({ Key? key }) : super(key: key);
 
@@ -62,7 +63,7 @@ class _SitterPageState extends State<SitterPage> {
         Positioned(
           top: 0,
           child: Image.network(
-            'http://' + CommonData.server + '/static/storys/' + (storys.isEmpty||storys[0]['image']==''?'default.jpg':storys[0]['image']),
+            'http://' + CommonData.server + '/static/storys/' + (storys.isEmpty||storys[0]['image']=='' ? 'default.jpg':storys[0]['coralID'].toString() + '/' + storys[0]['image']),
             width: ScreenUtil().setWidth(100),
             height: ScreenUtil().setWidth(50),
             fit: BoxFit.cover,
@@ -118,6 +119,7 @@ class _SitterPageState extends State<SitterPage> {
             padding: const EdgeInsets.all(0.0),
             children: [
               topArea,
+              // 我的珊瑚
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
                 child: const Text("我的珊瑚", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
@@ -138,6 +140,7 @@ class _SitterPageState extends State<SitterPage> {
                 ),
               ),
               const SizedBox(height: 15,),
+              // 珊瑚故事
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(7.5)),
                 child: const Text("故事精选", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
@@ -145,10 +148,11 @@ class _SitterPageState extends State<SitterPage> {
               const SizedBox(height: 10,),
               Column(
                 children: storys.map((story) => coralStory(
-                  ScreenUtil().setWidth(85),
-                  story['time'],
-                  story['text'],
-                  story['image']!=''?'http://' + CommonData.server + '/static/storys/' + story['image']:'')
+                    ScreenUtil().setWidth(85),
+                    story['updateTime'].substring(0, story['updateTime'].length-4),
+                    story['story'],
+                    story['image']!=''?'http://' + CommonData.server + '/static/storys/' + story['coralID'].toString() + '/' + story['image']:''
+                  )
                 ).toList(),
               ),
               const SizedBox(height: 10,),

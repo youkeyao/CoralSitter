@@ -15,6 +15,7 @@ import 'package:coralsitter/pages/openboxpage.dart';
 import 'package:coralsitter/pages/settingpage.dart';
 import 'package:coralsitter/pages/speciespage.dart';
 
+// 页面路由
 class MyRouter {
   static const adopt = 'adopt';
   static const boxresult = 'boxresult';
@@ -49,8 +50,9 @@ class MyRouter {
   };
 }
 
+// 用户信息
 class UserInfo {
-  int userID;
+  int userID; // 用户ID
   String name; // 用户名称
   String avatar; // 用户头像
   String sign; // 用户签名
@@ -58,24 +60,27 @@ class UserInfo {
   UserInfo({required this.userID, required this.name, required this.avatar, required this.sign, required this.tags});
 }
 
+// 珊瑚种类信息
 class CoralSpecies {
-  String species;
-  String speciesen;
-  List<String> tags;
-  String classification;
-  String classificationen;
-  int difficulty;
-  String growspeed;
-  String current;
-  String light;
-  String feed;
-  String color;
-  List<String> attention;
-  CoralSpecies({required this.species, required this.speciesen, required this.tags, required this.classification, required this.classificationen, required this.difficulty, required this.growspeed, required this.current, required this.light, required this.feed, required this.color, required this.attention});
+  int specieID;
+  String species; // 珊瑚种类名
+  String speciesen; // 珊瑚种类英文
+  List<String> tags; // 珊瑚标签
+  String classification; // 珊瑚大类
+  String classificationen; // 珊瑚大类英文
+  int difficulty; // 种植难度
+  String growspeed; // 生长速度
+  String current; // 水流
+  String light; // 光照
+  String feed; // 喂养要求
+  String color; // 色卡
+  List<String> attention; // 注意事项
+  CoralSpecies({required this.specieID, required this.species, required this.speciesen, required this.tags, required this.classification, required this.classificationen, required this.difficulty, required this.growspeed, required this.current, required this.light, required this.feed, required this.color, required this.attention});
 }
 
+// 珊瑚信息
 class CoralInfo {
-  int coralID;
+  int coralID; // 珊瑚ID
   String name; // 珊瑚名称
   String avatar; // 珊瑚头像
   String position; // 珊瑚地址
@@ -87,15 +92,15 @@ class CoralInfo {
   double lastmeasure; //距离上次测量
   double growth; // 平均每月增长
   int score; // 珊瑚得分
-  String birthtime;
-  String adopttime;
-  CoralSpecies species;
+  String birthtime; // 出生日期
+  String adopttime; // 领养日期
+  CoralSpecies species; // 种类
   CoralInfo({required this.coralID, required this.name, required this.avatar, required this.position, required this.updateTime, required this.light, required this.temp, required this.microelement, required this.size, required this.lastmeasure, required this.growth, required this.score, required this.birthtime, required this.adopttime, required this.species});
 }
 
 class CommonData {
-  static UserInfo? me;
-  static List<CoralInfo> mycorals = [];
-  static String server = "192.168.10.7:3000";
-  static int themeColor = 0xFF0058ea;
+  static UserInfo? me; // 当前登陆用户
+  static List<CoralInfo> mycorals = []; // 当前登陆用户拥有珊瑚
+  static String server = "127.0.0.1:3000"; // 后端地址
+  static int themeColor = 0xFF0058ea; // 主题颜色
 }

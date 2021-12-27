@@ -81,19 +81,19 @@ class _AdoptPageState extends State<AdoptPage> {
   void adopt() async {
     Map requestData = {
       'coralID': corals[pos].coralID.toString(),
-      'username': CommonData.me!.name,
-      'coralname': "未命名",
-      'position': "未定",
+      'masterID': CommonData.me!.userID.toString(),
+      'coralName': "未命名",
+      'position': corals[pos].position,
     };
     Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/adopt', requestData);
-    Map<dynamic, dynamic> posData = await childkey.currentState!.post('/getPos', requestData);
 
-    if (responseData['success'] == null || posData['pos'] == null) return;
+    if (!responseData['success']) return;
 
     if (responseData['success']) {
-      List positions = posData['pos'];
+      List positions = responseData['pos'];
       corals[pos].name = "未命名";
       corals[pos].position = positions[0];
+      corals[pos].adopttime = responseData['adopt_date'].split(' ')[0];
       CommonData.mycorals.add(corals[pos]);
       Navigator.of(context).pop();
       Navigator.of(context).pop({'coral': corals[pos], 'pos': positions});
@@ -116,7 +116,7 @@ class _AdoptPageState extends State<AdoptPage> {
     Widget infoArea = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        infoBox('年龄', (DateTime.now().difference(DateTime.parse(corals[pos].birthtime.replaceAll('.', '-'))).inDays / 365).toStringAsFixed(1), '年', control, render),
+        infoBox('年龄', (DateTime.now().difference(DateTime.parse(corals[pos].birthtime)).inDays / 365).toStringAsFixed(1), '年', control, render),
         infoBox('培育点', corals[pos].position.substring(0, corals[pos].position.length - 4), '', control, render),
         infoBox('大小', corals[pos].size.toString(), '厘米', control, render),
         infoBox('得分', corals[pos].score.toString(), '', control, render),

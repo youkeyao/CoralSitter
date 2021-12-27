@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 进度条
 Widget progressBar(value, width, height, {flag = true}) {
   Color outColor = flag ? Color(CommonData.themeColor) : Colors.white;
   Color inColor = flag ? Colors.white : Color(CommonData.themeColor);

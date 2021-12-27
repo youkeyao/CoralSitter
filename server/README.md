@@ -1,6 +1,10 @@
 # Server for project
 
-## static file
+## Requirement
+- MySQL
+- Flask
+
+## Static Files
 - coral_avatar  // 珊瑚头像
     - 1.jpg // coralID.jpg
     - 2.jpg
@@ -39,7 +43,7 @@
     ...
     - default.jpg // 默认头像
 
-## route
+## Route
 - /login 判断用户名和密码是否正确
     - post
     ```
@@ -53,15 +57,15 @@
     正确
     {
         'userID': int,
-        'username': string,
+        'userName': string,
         'sign': string,
         'tags': string, // 外向开朗-热情-心思细腻
         'mycorals': [   // 所有拥有珊瑚信息
             {
                 'coralID': int,
-                'coralname': string,
-                'position': string,
-                'updatetime': string, // 2021.1.2
+                'coralName': string,
+                'coralPosition': string,
+                'updateTime': string, // 2021.1.2
                 'light': string, // 充足
                 'temp': string, // 温暖
                 'microelement': string, // 偏少
@@ -69,21 +73,22 @@
                 'lastmeasure': float, // cm
                 'growth': float, // cm
                 'score': int,
-                'birthtime': string, // 2021.1.2
-                'adopttime': string, // 2021.1.2
+                'born_date': string, // 2021.1.2
+                'adopt_date': string, // 2021.1.2
                 'species': {    //珊瑚种类信息
+                    'specieID': int,
                     'species': string,
-                    'speciesen': string,
+                    'species_EN': string,
                     'tags': string, // 好强-敏感
                     'classification': string, // 大类
-                    'classificationen': string,
+                    'classification_EN': string,
                     'difficulty': int, // 1~5
                     'growspeed': string, // 快
-                    'current': current, // 中弱
-                    'light': light, // 中等
-                    'feed': feed, // 低
-                    'color': color, // FFFFFF-FBFCBB
-                    'attention': attention, // 易碎-毒性强
+                    'current': string, // 中弱
+                    'light': string, // 中等
+                    'feed': string, // 低
+                    'color': string, // FFFFFF-FBFCBB
+                    'attention': string, // 易碎-毒性强
                 },
             },
             ...
@@ -108,7 +113,7 @@
     成功
     {
         'userID': userID,
-        'username': username,
+        'userName': userName,
         'sign': sign,
         'tags': tags,
         'mycorals': [],
@@ -124,7 +129,7 @@
     ```
     {
         'userID': userID,
-        'username': username,
+        'userName': userName,
         'sign': sign,
         'tags': tags,
         'avatar': avatar, // base64编码字节流图片
@@ -151,11 +156,12 @@
     - response
     ```
     {
+        'specieID': specieID,
         'species': species,
-        'speciesen': speciesen,
+        'species_EN': species_EN,
         'tags': tags,
         'classification': classification,
-        'classificationen': classificationen,
+        'classification_EN': classification_EN,
         'difficulty': difficulty,
         'growspeed': growspeed,
         'current': current,
@@ -174,11 +180,12 @@
     - response
     ```
     {
+        'specieID': specieID,
         'species': species,
-        'speciesen': speciesen,
+        'species_EN': species_EN,
         'tags': tags,
         'classification': classification,
-        'classificationen': classificationen,
+        'classification_EN': classification_EN,
         'difficulty': difficulty,
         'growspeed': growspeed,
         'current': current,
@@ -201,9 +208,9 @@
         'result': [
             {
                 'coralID': coralID,
-                'coralname': coralname,
-                'position': position,
-                'updatetime': updatetime,
+                'coralName': coralName,
+                'coralPosition': string,
+                'updateTime': updateTime,
                 'light': light,
                 'temp': temp,
                 'microelement': microelement,
@@ -211,8 +218,8 @@
                 'lastmeasure': lastmeasure,
                 'growth': growth,
                 'score': score,
-                'birthtime': birthtime,
-                'adopttime': adopttime,
+                'birth_date_': birth_date,
+                'adopt_date': adopt_date,
                 'species': species,
             },
             ...
@@ -224,8 +231,8 @@
     ```
     {
         'coralID': coralID
-        'username': username,
-        'coralname': coralname,
+        'masterID': masterID,
+        'coralName': coralName,
         'position': position,
     }
     ```
@@ -233,27 +240,16 @@
     ```
     成功
     {
+        'adopt_date': adopt_date,
+        'pos': [
+            "凤凰岛西侧海域",
+            "渤海东侧海域"
+        ],
         'success': True
     }
     失败
     {
-        'success': True
-    }
-    ```
-- /gePos 返回可选位置
-    - post
-    ```
-    {
-    }
-    ```
-    - response
-    ```
-    {
-        'pos': [
-            "凤凰岛西侧海域",
-            "渤海东侧海域",
-            ...
-        ]
+        'success': False
     }
     ```
 - /getStory 根据珊瑚ID返回珊瑚故事
@@ -269,9 +265,9 @@
         'story': [
             {
                 'coralID': coralID,
-                'time': time,
-                'text': text,
-                'image': string, // 1/2021_1_2.jpg
+                'story': story,
+                'image': image,
+                'updateTime': updateTime,
             },
             ...
         ]

@@ -5,6 +5,7 @@ import 'package:sprintf/sprintf.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 珊瑚身份证页面
 class CoralIdentityPage extends StatefulWidget {
   const CoralIdentityPage({ Key? key }) : super(key: key);
 
@@ -24,7 +25,7 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
   Widget build(BuildContext context) {
     coral = ModalRoute.of(context)?.settings.arguments as CoralInfo;
 
-    // avatar and name
+    // 头像和名字区域
     Widget titleArea = Padding(
       padding: EdgeInsets.all(ScreenUtil().setHeight(2)),
       child: Row(
@@ -34,7 +35,7 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
             elevation: 10,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenUtil().setHeight(7))),
             child: ClipOval(
-              child: Image.network(coral.avatar, width: ScreenUtil().setHeight(14), height: ScreenUtil().setHeight(14),),
+              child: Image.network(coral.avatar, width: ScreenUtil().setHeight(14), height: ScreenUtil().setHeight(14), fit: BoxFit.cover,),
             ),
           ),
           Column(
@@ -58,7 +59,7 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
       ),
     );
 
-    // coral info
+    // 珊瑚信息
     Widget infoArea = Expanded(
       child: Container(
         height: ScreenUtil().setHeight(20),
@@ -97,9 +98,9 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('出生时间', style: TextStyle(fontSize: 12, color: Colors.black54),),
+                    const Text('领养时间', style: TextStyle(fontSize: 12, color: Colors.black54),),
                     const SizedBox(height: 10.0,),
-                    Text(coral.birthtime, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                    Text(coral.adopttime, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                   ],
                 ),
                 const SizedBox(),
@@ -127,12 +128,12 @@ class _CoralIdentityPageState extends State<CoralIdentityPage> {
         body: Stack(
           alignment: Alignment.center,
           children: [
-            // background
+            // 背景
             Positioned(
               top: 0,
               child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
             ),
-            // top bar
+            // 标题栏
             Positioned(
               top: ScreenUtil().setHeight(4.8),
               child: Text('珊瑚身份证', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),

@@ -1,32 +1,70 @@
+from os import abort
 from flask import Flask, request, g
 from contextlib import closing
 import config
-import sqlite3
+import pymysql
 import shutil
 import base64
+import numpy as np
+from queue import PriorityQueue
+import datetime
 
 app = Flask(__name__)
 
 '''
-init the database
+connect database
 '''
-def init_db():
-    with closing(connect_db()) as db:
-        with open('data.sql') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
-
 def connect_db():
-    return sqlite3.connect(config.DATABASE)
+    return pymysql.connect(**config.DATABASE)
 
 '''
 help function for database
 '''
-def query_db(query, args=(), one=False):
-    cur = g.db.execute(query, args)
-    rv = [dict((cur.description[idx][0], value)
-        for idx, value in enumerate(row)) for row in cur.fetchall()]
-    return (rv[0] if rv else None) if one else rv
+def search_db(table, column, search_data, one=False):
+    cursor = g.db.cursor()
+    sql = 'select ' + column + ' from ' + str(table) + ' where '\
+        + ' and '.join(search_data)    # connect each constraint to form a full command
+    try:
+        cursor.execute(sql)    
+        results = cursor.fetchall()
+        return (results[0] if results else None) if one else results   # return single dict, dict list, or None if not found
+    except Exception as e:
+        print(e)
+        return None
+
+def insert_db(table, insert_data):
+    cursor = g.db.cursor()
+    sql = 'insert into ' + str(table) + ' (' +\
+          ','.join(insert_data.keys()) + \
+          ') values (' + ','.join(insert_data.values()) + ')'
+    try:
+        cursor.execute(sql)
+        g.db.commit()
+    except Exception as e:
+        print(e)
+        g.db.rollback()
+        raise Exception
+
+def update_db(table, update_data, search_data):
+    cursor = g.db.cursor()
+    update_cond = []
+    search_cond = []
+
+    for key, value in update_data.items():
+        update_cond.append(str(key) + " = " + str(value))
+    for key, value in search_data.items():
+        search_cond.append(str(key) + " = " + str(value))
+    
+    sql = 'update ' + str(table) + ' set '\
+        + ' , '.join(update_cond) + ' where '\
+        + ' and '.join(search_cond)
+    try:
+        cursor.execute(sql)
+        g.db.commit()
+    except Exception as e:
+        print(e)
+        g.db.rollback()
+        raise Exception
 
 '''
 connect database before request
@@ -51,15 +89,15 @@ post: {
 }
 response: {
     'userID': userID,
-    'username': username,
+    'userName': userName,
     'sign': sign,
     'tags': tags,
     'mycorals': [
         {
             'coralID': coralID,
-            'coralname': coralname,
-            'position': position,
-            'updatetime': updatetime,
+            'coralName': coralName,
+            'coralPosition': coralPosition,
+            'updateTime': updateTime,
             'light': light,
             'temp': temp,
             'microelement': microelement,
@@ -67,14 +105,15 @@ response: {
             'lastmeasure': lastmeasure,
             'growth': growth,
             'score': score,
-            'birthtime': birthtime,
-            'adopttime': adopttime,
+            'born_date': born date,
+            'adopt_date': adopt date,
             'species': {
+                'specieID': specieID,
                 'species': species,
-                'speciesen': speciesen,
+                'species_EN': species_EN,
                 'tags': tags,
                 'classification': classification,
-                'classificationen': classificationen,
+                'classification_EN': classification_EN,
                 'difficulty': difficulty,
                 'growspeed': growspeed,
                 'current': current,
@@ -93,18 +132,18 @@ response: {
 def login():
     username = request.form['username']
     password = request.form['password']
-    user = query_db('select * from users where username = ?',
-        [username], one=True)
+    user = search_db('userinfo', '*', ['username=' + '\'' + username + '\''], one=True)
 
     if user and user['password'] == password:
         user['success'] = True
-        corals = query_db('select * from corals where master = ?',
-            [username])
+        corals = search_db('coralinfo', '*', ['masterID=' + str(user['userID'])])
         user['mycorals'] = []
         for coral in corals:
-            species = query_db('select * from coralspecies where species = ?',
-                [coral['species']], one=True)
+            species = search_db('species', '*', ['specieID=' + str(coral['speciesID'])], one=True)
             coral['species'] = species
+            coral['updateTime'] = str(coral['updateTime'])
+            coral['born_date'] = str(coral['born_date'])
+            coral['adopt_date'] = str(coral['adopt_date'])
             user['mycorals'].append(coral)
     else:
         user = {}
@@ -119,7 +158,7 @@ post: {
 }
 response: {
     'userID': userID,
-    'username': username,
+    'userName': userName,
     'sign': sign,
     'tags': tags,
     'mycorals': [],
@@ -130,8 +169,7 @@ response: {
 def signup():
     username = request.form['username']
     password = request.form['password']
-    user = query_db('select * from users where username = ?',
-        [username], one=True)
+    user = search_db('userinfo', '*', ['username=' + '\'' + username + '\''], one=True)
 
     response = {}
 
@@ -140,18 +178,14 @@ def signup():
         return response
 
     try:
-        g.db.execute('insert into users values(?, ?, ?, ?, ?)',
-            [None, username, password, "无签名", "无标签"])
-        g.db.commit()
-        user = query_db('select * from users where username = ?',
-            [username], one=True)
-        print(user)
+        insert_db('userinfo', {'username': '\'' + username + '\'', 'password': '\'' + password + '\''})
+        user = search_db('userinfo', '*', ['username=' + '\'' + username + '\''], one=True)
         shutil.copy("./static/user_avatar/default.jpg", "./static/user_avatar/" + str(user['userID']) + ".jpg")
         response = {
             'userID': user['userID'],
             'username': username,
             'sign': "无签名",
-            'tags': "无标签",
+            'tags': "",
             'mycorals': [],
             'success': True,
         }
@@ -163,7 +197,7 @@ def signup():
 changeUserInfo route
 post: {
     'userID': userID,
-    'username': username,
+    'userName': userName,
     'sign': sign,
     'tags': tags,
     'avatar': avatar,
@@ -175,7 +209,7 @@ response: {
 @app.route('/changeUserInfo',methods=["POST"])
 def changeUserInfo():
     userID = request.form['userID']
-    username = request.form['username']
+    userName = request.form['userName']
     sign = request.form['sign']
     tags = request.form['tags']
     avatar = request.form['avatar']
@@ -187,23 +221,74 @@ def changeUserInfo():
             file = open("./static/user_avatar/" + str(userID) + ".jpg", 'wb')
             file.write(base64.b64decode(avatar))
             file.close()
+        update_db('userinfo', {'userName': '\''+userName+'\'', 'sign': '\''+sign+'\'', 'tags': '\''+tags+'\''}, {'userID': userID})
         response['success'] = True
     except:
         response['success'] = False
     
     return response
 
+
+'''
+calculate the congruence(distance) between coral and user
+'''
+def get_tags_score(tags):
+    tags = tags.split('-')
+    tags_score = [0,0,0,0]
+    if '大大咧咧' in tags:
+        tags_score[0]=1
+    elif '乐观' in tags:
+        tags_score[0]=2
+    elif '玻璃心' in tags:
+        tags_score[0]=3
+    else:
+        tags_score[0]=np.random.randint(1,3,1)[0]
+    if '内向' in tags:
+        tags_score[1]=1
+    elif '害羞' in tags:
+        tags_score[1]=2
+    elif '开朗' in tags:
+        tags_score[1]=3
+    elif '热情' in tags:
+        tags_score[1]=4
+    else:
+        tags_score[1]=np.random.randint(1,4,1)[0]
+    if '沉稳' in tags:
+        tags_score[2]=1
+    elif '冷静' in tags:
+        tags_score[2]=2
+    elif '好奇' in tags:
+        tags_score[2]=3
+    elif '勇敢' in tags:
+        tags_score[2]=4
+    else:
+        tags_score[2]=np.random.randint(1,4,1)[0]
+    if '聆听者' in tags:
+        tags_score[3]=1
+    elif '组织者' in tags:
+        tags_score[3]=2
+    elif '管理者' in tags:
+        tags_score[3]=3
+    else:
+        tags_score[3]=np.random.randint(1,3,1)[0]
+    return tags_score
+def distance(user_tags, species_tags):
+    dis = 0
+    for i in range(4):
+        dis = dis+(user_tags[i]-species_tags[i])*(user_tags[i]-species_tags[i])
+    return dis
 '''
 match route
 post: {
     'tags': tags
 }
 response: {
+    'specieID': specieID,
     'species': species,
-    'speciesen': speciesen,
+    'species_EN': species_EN,
     'tags': tags,
     'classification': classification,
-    'classificationen': classificationen,
+    'classification_EN': classification_EN,
     'difficulty': difficulty,
     'growspeed': growspeed,
     'current': current,
@@ -217,21 +302,32 @@ response: {
 def match():
     tags = request.form['tags']
 
-    species = query_db('select * from coralspecies',
-        [],)
-    
-    return species[0]
+    all = search_db('species', 'specieID, tags', ['remain>0'])
+
+    if all:
+        user_tags = get_tags_score(tags)
+        q = PriorityQueue()
+        for species in all:
+            species_tags = get_tags_score(species['tags'])
+            dis = (distance(user_tags, species_tags), species['specieID'])
+            q.put(dis)
+        specieID = q.get()[1]
+        species = search_db('species', '*', ['specieID=' + str(specieID)], one=True)
+        return species
+    else:
+        abort(404)
 
 '''
 box route
 post: {
 }
 response: {
+    'specieID': specieID,
     'species': species,
-    'speciesen': speciesen,
+    'speciesen': species_EN,
     'tags': tags,
     'classification': classification,
-    'classificationen': classificationen,
+    'classificationen': classification_EN,
     'difficulty': difficulty,
     'growspeed': growspeed,
     'current': current,
@@ -243,23 +339,27 @@ response: {
 '''
 @app.route('/box',methods=["POST"])
 def box():
-    species = query_db('select * from coralspecies',
-        [],)
-    
-    return species[0]
+    all = search_db('species', 'specieID', ['remain>0'])
+
+    if all:
+        specieID = np.random.choice(all, 1)[0]['specieID']
+        species = search_db('species', '*', ['specieID=' + str(specieID)], one=True)
+        return species
+    else:
+        abort(404)
 
 '''
 listCorals route
 post: {
-    'species': species
+    'specieID': specieID
 }
 response: {
     'result': [
         {
             'coralID': coralID,
-            'coralname': coralname,
-            'position': position,
-            'updatetime': updatetime,
+            'coralName': coralName,
+            'coralPosition': coralPosition,
+            'updateTime': updateTime,
             'light': light,
             'temp': temp,
             'microelement': microelement,
@@ -267,8 +367,8 @@ response: {
             'lastmeasure': lastmeasure,
             'growth': growth,
             'score': score,
-            'birthtime': birthtime,
-            'adopttime': adopttime,
+            'born_date': born_date,
+            'adopt_date': adopt_date,
             'species': species,
         },
         ...
@@ -277,48 +377,62 @@ response: {
 '''
 @app.route('/listCorals',methods=["POST"])
 def listCorals():
-    species = request.form['species']
-
-    corals = query_db('select * from corals where species = ?',
-        [species])
-
+    specieID = request.form['specieID']
+    corals = search_db('coralinfo', '*', ['speciesID=' + str(specieID), 'masterID=-1'])
+    for coral in corals:
+        coral['updateTime'] = str(coral['updateTime'])
+        coral['born_date'] = str(coral['born_date'])
+        coral['adopt_date'] = str(coral['adopt_date'])
     return {'result': corals}
 
 '''
 adopt route
 post: {
     'coralID': coralID
-    'username': username,
-    'coralname': coralname,
+    'masterID': masterID,
+    'coralName': coralName,
     'position': position,
 }
 response: {
+    'adopt_date': adopt_date,
+    'pos': [
+        "凤凰岛西侧海域",
+        "渤海东侧海域"
+    ],
     'success': True/False
 }
 '''
 @app.route('/adopt',methods=["POST"])
 def adopt():
-    return {'success': True}
+    coralID = request.form['coralID']
+    masterID = request.form['masterID']
+    coralName = request.form['coralName']
+    position = request.form['position']
 
-'''
-getPos route
-post: {
-}
-response: {
-    'pos': [
-        "凤凰岛西侧海域",
-        "渤海东侧海域"
-    ]
-}
-'''
-@app.route('/getPos',methods=["POST"])
-def getPos():
-    return {
-        'pos': [
+    response = {}
+
+    try:
+        coral = search_db('coralinfo', '*', ['coralID=' + str(coralID)], one=True)
+        if coral['masterID'] == -1:
+            remain = search_db('species', 'remain', ['specieID=' + str(coral['speciesID'])], one=True)['remain']
+            update_db('species', {'remain': str(remain-1)}, {'specieID': coral['speciesID']})
+        adopt_date = datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d %H:%M:%S')
+        update_db('coralinfo', {'masterID': str(masterID), 'coralName': '\''+coralName+'\'', 'coralPosition': '\''+position+'\'', 'adopt_date': '\''+adopt_date+'\''}, {'coralID': coralID})
+        response['adopt_date'] = adopt_date
+        response['pos'] = [
             "凤凰岛西侧海域",
-            "渤海东侧海域"
+            "渤海东侧海域",
+            "渤海西侧海域",
+            "黄海东侧海域",
+            "黄海西侧海域",
+            "崇明岛西侧海域",
+            "南海诸岛海域",
         ]
-    }
+        response['success'] = True
+    except:
+        response['success'] = False
+    
+    return response
 
 '''
 getStory route
@@ -329,9 +443,9 @@ response: {
     'story': [
         {
             'coralID': coralID,
-            'time': time,
-            'text': text,
+            'story': story,
             'image': image,
+            'updateTime': updateTime,
         }
     ]
 }
@@ -339,21 +453,12 @@ response: {
 @app.route('/getStory',methods=["POST"])
 def getStory():
     coralIDs = request.form['coralIDs'].split('-')
+    stories = []
+    if coralIDs[0] != '':
+        for i in coralIDs:
+            stories += search_db('stories', '*', ['coralID=' + i])
     return {
-        'story': [
-            {
-                'coralID': 1,
-                'time': '2021年1月2日',
-                'text': '小丑鱼拜访了我',
-                'image': '1/2021_1_2.jpg',
-            },
-            {
-                'coralID': 1,
-                'time': '2021年1月2日',
-                'text': '小丑鱼拜访了我',
-                'image': '1/2021_1_2.jpg',
-            },
-        ]
+        'story': stories
     }
 
 # main

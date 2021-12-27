@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
+// 卡片内容
 Widget cardContent(String url, String text) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -18,6 +19,7 @@ Widget cardContent(String url, String text) {
   );
 }
 
+// 无限拖动卡片
 class DraggableCards extends StatefulWidget {
   const DraggableCards({ Key? key, required this.width, required this.height, required this.urls, required this.texts, required this.getPos, required this.next }) : super(key: key);
   final double width;
@@ -98,7 +100,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
         alignment: Alignment.center,
         children: [
           SizedBox(width: widget.width, height: widget.height,),
-          // third card
+          // 第三张
           Positioned(
             left: lefts[0],
             child: Transform.rotate(
@@ -115,7 +117,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
               ),
             ),
           ),
-          // second card
+          // 第二张
           CustomAnimation(
             control: insertControl,
             duration: Duration(milliseconds: (500).round()),
@@ -142,7 +144,7 @@ class _DraggableCardsState extends State<DraggableCards> with SingleTickerProvid
               insertControl = CustomAnimationControl.stop;
             },
           ),
-          // first card
+          // 第一张
           CustomAnimation(
             control: removeControl,
             duration: Duration(milliseconds: (450).round()),

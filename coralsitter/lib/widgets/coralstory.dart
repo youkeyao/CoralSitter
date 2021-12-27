@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// 珊瑚故事
 Widget coralStory(double width, String time, String text, String image) {
   return Container(
     width: width,

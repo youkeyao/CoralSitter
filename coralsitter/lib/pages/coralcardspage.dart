@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 珊瑚身份证
 Widget coralCard(CoralInfo coral, BuildContext context, {int key=0}) {
   return Container(
     margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(4)),
@@ -16,7 +17,7 @@ Widget coralCard(CoralInfo coral, BuildContext context, {int key=0}) {
         onPressed: () => Navigator.of(context).pushNamed(MyRouter.coralidentity, arguments: coral),
         child: ListTile(
           leading: ClipOval(
-            child: Image.network(coral.avatar, width: ScreenUtil().setWidth(10), height: ScreenUtil().setWidth(10),),
+            child: Image.network(coral.avatar, width: ScreenUtil().setWidth(10), height: ScreenUtil().setWidth(10), fit: BoxFit.cover,),
           ),
           title: Row(
             children: [
@@ -39,6 +40,7 @@ Widget coralCard(CoralInfo coral, BuildContext context, {int key=0}) {
   );
 }
 
+// 珊瑚卡包页面
 class CoralCardsPage extends StatefulWidget {
   const CoralCardsPage({ Key? key }) : super(key: key);
 

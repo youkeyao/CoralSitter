@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:coralsitter/common.dart';
 
+// 后端交互
 class ServerDialog extends StatefulWidget {
   const ServerDialog({
     Key? key,

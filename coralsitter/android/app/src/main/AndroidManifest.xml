@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.coralsitter">
    <application
-        android:label="coralsitter"
-        android:icon="@mipmap/ic_launcher">
+        android:label="珊护"
+        android:icon="@mipmap/coralsitter">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

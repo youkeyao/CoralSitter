@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/tagsbox.dart';
 
+// 功能按钮
 Widget meItem(IconData icon, String str, Function() func) {
   return TextButton(
     onPressed: func,
@@ -17,6 +18,7 @@ Widget meItem(IconData icon, String str, Function() func) {
   );
 }
 
+// 个人信息页面
 class MePage extends StatefulWidget {
   const MePage({ Key? key, required this.callback }) : super(key: key);
   final Function callback;

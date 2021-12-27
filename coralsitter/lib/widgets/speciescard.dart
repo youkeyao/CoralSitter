@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 珊瑚种类卡片
 Widget speciesCard(CoralSpecies species) {
+  // 珊瑚种类信息
   Widget speciesInfoArea = Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -138,6 +140,7 @@ Widget speciesCard(CoralSpecies species) {
       Text(species.species, style: const TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1),),
       Text(species.speciesen, style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1),),
       SizedBox(height: ScreenUtil().setHeight(6),),
+      // 标签
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: species.tags.map((tag) => Row(
@@ -162,7 +165,7 @@ Widget speciesCard(CoralSpecies species) {
       SizedBox(height: ScreenUtil().setHeight(2),),
       speciesInfoArea,
       SizedBox(height: ScreenUtil().setHeight(3),),
-      // color card
+      // 色卡
       Container(
         padding: EdgeInsets.only(right: ScreenUtil().setWidth(3)),
         alignment: Alignment.centerRight,

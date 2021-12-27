@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 登录页面
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key, required this.callback }) : super(key: key);
   final Function callback;
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: ScreenUtil().setHeight(8),),
             Image(image: const AssetImage('assets/icons/icon.png'), height: ScreenUtil().setHeight(35),),
             SizedBox(height: ScreenUtil().setHeight(12),),
-            // login button
+            // 登陆按钮
             Container(
               height: ScreenUtil().setHeight(5),
               margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),

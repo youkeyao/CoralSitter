@@ -1,6 +1,10 @@
 # CoralSitter
 
-## pages
+## Requirement
+- Flutter
+- Android SDK
+
+## Pages
 - loginpage
    - logintestpage
 - homepage
@@ -20,7 +24,7 @@
    - coralcardspage
       - coralidentitypage
 
-## widgets
+## Widgets
 - coralBox 珊瑚信息容器
 - coralStory 珊瑚故事卡片
 - DraggableCards 无限拖动卡片组件

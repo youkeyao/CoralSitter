@@ -6,6 +6,7 @@ import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/speciescard.dart';
 import 'package:coralsitter/widgets/serverdialog.dart';
 
+// 抽取结果页面
 class CoralResultPage extends StatefulWidget {
   const CoralResultPage({ Key? key }) : super(key: key);
 
@@ -17,9 +18,9 @@ class _CoralResultPageState extends State<CoralResultPage> {
   final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
   late CoralSpecies species;
 
-  void adopt(BuildContext context, String s) async {
+  void adopt(BuildContext context, int id) async {
     Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/listCorals', {
-      'species': s,
+      'specieID': id.toString(),
     });
 
     if (responseData['result'] == null) return;
@@ -33,10 +34,10 @@ class _CoralResultPageState extends State<CoralResultPage> {
         corals.add(
           CoralInfo(
             coralID: coral['coralID'],
-            name: coral['coralname'],
+            name: coral['coralName'],
             avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralID'].toString() + '.jpg',
-            position: coral['position'],
-            updateTime: coral['updatetime'],
+            position: coral['coralPosition'],
+            updateTime: coral['updateTime'].split(' ')[0],
             light: coral['light'],
             temp: coral['temp'],
             microelement: coral['microelement'],
@@ -44,8 +45,8 @@ class _CoralResultPageState extends State<CoralResultPage> {
             lastmeasure: coral['lastmeasure'],
             growth: coral['growth'],
             score: coral['score'],
-            birthtime: coral['birthtime'],
-            adopttime: coral['adopttime'],
+            birthtime: coral['born_date'].split(' ')[0],
+            adopttime: coral['adopt_date'].split(' ')[0],
             species: species,
           )
         )
@@ -66,12 +67,12 @@ class _CoralResultPageState extends State<CoralResultPage> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // background
+              // 背景
               Positioned(
                 top: 0,
                 child: Image.asset('assets/images/coralbackground.png', width: ScreenUtil().setWidth(100),),
               ),
-              // top bar
+              // 标题栏
               Positioned(
                 top: ScreenUtil().setHeight(4.8),
                 child: Text('珊瑚特征', style: TextStyle(fontSize: ScreenUtil().setHeight(2.6), color: Colors.white, fontWeight: FontWeight.bold),),
@@ -97,22 +98,22 @@ class _CoralResultPageState extends State<CoralResultPage> {
                       height: ScreenUtil().setHeight(5),
                       child: TextButton(
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white),),
-                        onPressed: () => adopt(context, species.species),
+                        onPressed: () => adopt(context, species.specieID),
                         child: Text("领养这种珊瑚", style: TextStyle(fontSize: 14, color: Color(CommonData.themeColor)),)
                       ),
                     ),
-                    Container(
-                      height: ScreenUtil().setHeight(5),
-                      margin: const EdgeInsets.all(0.0),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pushNamed(MyRouter.match);
-                        },
-                        child: const Text("换一种珊瑚", style: TextStyle(fontSize: 12, color: Colors.white),)
-                      )
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(3),),
+                    // Container(
+                    //   height: ScreenUtil().setHeight(5),
+                    //   margin: const EdgeInsets.all(0.0),
+                    //   child: TextButton(
+                    //     onPressed: () {
+                    //       Navigator.of(context).pop();
+                    //       Navigator.of(context).pushNamed(MyRouter.match);
+                    //     },
+                    //     child: const Text("换一种珊瑚", style: TextStyle(fontSize: 12, color: Colors.white),)
+                    //   )
+                    // ),
+                    SizedBox(height: ScreenUtil().setHeight(8),),
                   ],
                 ),
               ),

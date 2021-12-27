@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/serverdialog.dart';
 
+// 完善珊瑚信息页面
 class CoralCompletePage extends StatefulWidget {
   const CoralCompletePage({ Key? key }) : super(key: key);
 
@@ -28,8 +29,8 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
 
     Map requestData = {
       'coralID': coral.coralID.toString(),
-      'username': CommonData.me!.name,
-      'coralname': _controller.text,
+      'masterID': CommonData.me!.userID.toString(),
+      'coralName': _controller.text,
       'position': pos,
     };
     Map<dynamic, dynamic> responseData = await childkey.currentState!.post('/adopt', requestData);
@@ -39,6 +40,7 @@ class _CoralCompletePageState extends State<CoralCompletePage> {
     if (responseData['success']) {
       coral.name = _controller.text;
       coral.position = pos;
+      coral.adopttime = responseData['adopt_date'].split(' ')[0];
       Navigator.of(context).pop();
       Navigator.of(context).pushNamed(MyRouter.coralidentity, arguments: coral);
     }

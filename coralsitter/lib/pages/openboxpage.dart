@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/progressbar.dart';
 
+// 正在打开盲盒页面
 class OpenBoxPage extends StatefulWidget {
   const OpenBoxPage({ Key? key }) : super(key: key);
 
@@ -30,11 +31,12 @@ class _OpenBoxPageState extends State<OpenBoxPage> {
 
     Map<dynamic, dynamic> responseData = json.decode(response.body);
     species = CoralSpecies(
+      specieID: responseData['specieID'],
       species: responseData['species'],
-      speciesen: responseData['speciesen'],
+      speciesen: responseData['species_EN'],
       tags: responseData['tags'].split('-'),
       classification: responseData['classification'],
-      classificationen: responseData['classificationen'],
+      classificationen: responseData['classification_EN'],
       difficulty: responseData['difficulty'],
       growspeed: responseData['growspeed'],
       current: responseData['current'],
@@ -71,7 +73,7 @@ class _OpenBoxPageState extends State<OpenBoxPage> {
           children: [
             SizedBox(width: ScreenUtil().setWidth(100), height: ScreenUtil().setHeight(8),),
             PlayAnimation(
-              duration: Duration(milliseconds: (1000).round()),
+              duration: Duration(milliseconds: (10000).round()),
               tween: Tween(begin: 0.0, end: 1.0),
               builder: (context, child, double value) {
                 return progressBar(value, ScreenUtil().setWidth(70), ScreenUtil().setHeight(2), flag: false);

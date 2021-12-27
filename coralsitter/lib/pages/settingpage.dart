@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:coralsitter/common.dart';
 
+// 设置页面
 class SettingPage extends StatefulWidget {
   const SettingPage({ Key? key }) : super(key: key);
 

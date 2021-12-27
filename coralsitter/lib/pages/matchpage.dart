@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/progressbar.dart';
 
+// 背景动画
 class AnimatedWave extends StatelessWidget {
   const AnimatedWave({Key? key, required this.height, required this.speed, this.offset = 0.0}) : super(key: key);
   final double height;
@@ -35,6 +36,7 @@ class AnimatedWave extends StatelessWidget {
   }
 }
 
+// 画背景
 class CurvePainter extends CustomPainter {
   const CurvePainter({ Key? key, required this.value});
   final double value;
@@ -66,6 +68,7 @@ class CurvePainter extends CustomPainter {
   }
 }
 
+// 匹配页面
 class MatchPage extends StatefulWidget {
   const MatchPage({ Key? key }) : super(key: key);
 
@@ -97,11 +100,12 @@ class _MatchPageState extends State<MatchPage> {
 
     Map<dynamic, dynamic> responseData = json.decode(response.body);
     species = CoralSpecies(
+      specieID: responseData['specieID'],
       species: responseData['species'],
-      speciesen: responseData['speciesen'],
+      speciesen: responseData['species_EN'],
       tags: responseData['tags'].split('-'),
       classification: responseData['classification'],
-      classificationen: responseData['classificationen'],
+      classificationen: responseData['classification_EN'],
       difficulty: responseData['difficulty'],
       growspeed: responseData['growspeed'],
       current: responseData['current'],
@@ -160,9 +164,9 @@ class _MatchPageState extends State<MatchPage> {
                   SizedBox(height: ScreenUtil().setHeight(4)),
                   const Text('按照标签为您匹配一只独一无二的珊瑚', style: TextStyle(fontSize: 12, color: Colors.white,),),
                   SizedBox(height: ScreenUtil().setHeight(4)),
-                  // progressbar
+                  // 进度条
                   PlayAnimation(
-                    duration: Duration(milliseconds: (1000).round()),
+                    duration: Duration(milliseconds: (10000).round()),
                     tween: Tween(begin: 0.0, end: 1.0),
                     builder: (context, child, double value) {
                       return progressBar(value, ScreenUtil().setWidth(70), ScreenUtil().setHeight(2));
@@ -179,6 +183,7 @@ class _MatchPageState extends State<MatchPage> {
                     },
                   ),
                   SizedBox(height: ScreenUtil().setHeight(6)),
+                  // 取消按钮
                   ElevatedButton(
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(Colors.blue[300]),

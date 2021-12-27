@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:coralsitter/common.dart';
 import 'package:coralsitter/widgets/serverdialog.dart';
 
+// 登陆详情页面
 class LoginTextPage extends StatefulWidget {
   const LoginTextPage({ Key? key }) : super(key: key);
 
@@ -16,7 +17,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
   late Function callback;
   Color? background = Color(CommonData.themeColor);
   final GlobalKey<ServerDialogState> childkey = GlobalKey<ServerDialogState>();
-  // focus
+  // 焦点
   final FocusNode _focusNodeUserName = FocusNode();
   final FocusNode _focusNodePassWord = FocusNode();
   final FocusNode _focusNodeConfirmPassWord = FocusNode();
@@ -96,19 +97,19 @@ class _LoginTextPageState extends State<LoginTextPage> {
       if (responseData['success']) {
         CommonData.me = UserInfo(
           userID: responseData['userID'],
-          name: responseData['username'],
+          name: responseData['userName'],
           avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['userID'].toString() + '.jpg',
           sign: responseData['sign'],
-          tags: responseData['tags'].split('-'),
+          tags: responseData['tags']=='' ? []:responseData['tags'].split('-'),
         );
         responseData['mycorals'].forEach((coral) => {
           CommonData.mycorals.add(
             CoralInfo(
               coralID: coral['coralID'],
-              name: coral['coralname'],
+              name: coral['coralName'],
               avatar: 'http://' + CommonData.server + '/static/coral_avatar/' + coral['coralID'].toString() + '.jpg',
-              position: coral['position'],
-              updateTime: coral['updatetime'],
+              position: coral['coralPosition'],
+              updateTime: coral['updateTime'].split(' ')[0],
               light: coral['light'],
               temp: coral['temp'],
               microelement: coral['microelement'],
@@ -116,14 +117,15 @@ class _LoginTextPageState extends State<LoginTextPage> {
               lastmeasure: coral['lastmeasure'],
               growth: coral['growth'],
               score: coral['score'],
-              birthtime: coral['birthtime'],
-              adopttime: coral['adopttime'],
+              birthtime: coral['born_date'].split(' ')[0],
+              adopttime: coral['adopt_date'].split(' ')[0],
               species: CoralSpecies(
+                specieID: coral['species']['specieID'],
                 species: coral['species']['species'],
-                speciesen: coral['species']['speciesen'],
+                speciesen: coral['species']['species_EN'],
                 tags: coral['species']['tags'].split('-'),
                 classification: coral['species']['classification'],
-                classificationen: coral['species']['classificationen'],
+                classificationen: coral['species']['classification_EN'],
                 difficulty: coral['species']['difficulty'],
                 growspeed: coral['species']['growspeed'],
                 current: coral['species']['current'],
@@ -170,7 +172,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
           name: responseData['username'],
           avatar: 'http://' + CommonData.server + '/static/user_avatar/' + responseData['userID'].toString() + '.jpg',
           sign: responseData['sign'],
-          tags: responseData['tags'].split('-'),
+          tags: responseData['tags']=='' ? []:responseData['tags'].split('-'),
         );
         Navigator.of(context).pop();
         callback();
@@ -186,6 +188,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
   Widget build(BuildContext context) {
     callback = ModalRoute.of(context)?.settings.arguments as Function;
 
+    // 用户名输入
     Widget userInput = TextFormField(
       controller: _userNameController,
       focusNode: _focusNodeUserName,
@@ -215,6 +218,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
       },
     );
 
+    // 米码输入
     Widget pswInput = TextFormField(
       focusNode: _focusNodePassWord,
       style: const TextStyle(color: Colors.white),
@@ -246,6 +250,7 @@ class _LoginTextPageState extends State<LoginTextPage> {
       },
     );
 
+    // 确认密码输入
     Widget confirmPswInput = TextFormField(
       focusNode: _focusNodeConfirmPassWord,
       style: const TextStyle(color: Colors.white),

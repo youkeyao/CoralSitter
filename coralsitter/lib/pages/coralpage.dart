@@ -6,6 +6,7 @@ import 'package:coralsitter/widgets/swipercards.dart';
 import 'package:coralsitter/widgets/serverdialog.dart';
 import 'package:coralsitter/widgets/coralstory.dart';
 
+// 监测信息
 Widget monitorBox(Color color, IconData icon, String indicator, String value) {
   return Stack(
     alignment: Alignment.center,
@@ -47,6 +48,7 @@ Widget monitorBox(Color color, IconData icon, String indicator, String value) {
   );
 }
 
+// 成长信息
 Widget growBox(String title, String value) {
   return Column(
     children: [
@@ -63,6 +65,7 @@ Widget growBox(String title, String value) {
   );
 }
 
+// 珊瑚详情页面
 class CoralPage extends StatefulWidget {
   const CoralPage({ Key? key }) : super(key: key);
 
@@ -255,10 +258,11 @@ class _CoralPageState extends State<CoralPage> {
                     const SizedBox(height: 10,),
                     Column(
                       children: storys.map((story) => coralStory(
-                        ScreenUtil().setWidth(85),
-                        story['time'],
-                        story['text'],
-                        'http://' + CommonData.server + '/static/storys/' + story['image'] + '?' + DateTime.now().millisecondsSinceEpoch.toString())
+                          ScreenUtil().setWidth(85),
+                          story['updateTime'],
+                          story['story'],
+                          story['image']!=''?'http://' + CommonData.server + '/static/storys/' + story['coralID'].toString() + '/' + story['image']:'',
+                        )
                       ).toList(),
                     ),
                     const SizedBox(height: 10,),
